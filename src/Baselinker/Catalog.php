@@ -29,6 +29,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a price group from BaseLinker storage.
      *
+     * @param int $priceGroupId
      * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
      *
      * @see https://api.baselinker.com/?method=deleteInventoryPriceGroup
