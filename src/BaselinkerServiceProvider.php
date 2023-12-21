@@ -2,7 +2,6 @@
 
 namespace Core45\LaravelBaselinker;
 
-use Core45\Baselinker;
 use Illuminate\Support\ServiceProvider;
 
 class BaselinkerServiceProvider extends ServiceProvider

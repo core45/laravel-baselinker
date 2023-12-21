@@ -13,4 +13,9 @@ class Catalog extends LaravelBaselinker
 
         return $this->makeRequest($params);
     }
+
+    public function test()
+    {
+        return 'Catalog test says: Hello World!';
+    }
 }
