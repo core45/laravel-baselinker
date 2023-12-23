@@ -55,7 +55,10 @@ class ExternalStorage extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getExternalStorageProductsData
      */
-    public function getExternalStorageProductsData(string $storageId, array $products)
+    public function getExternalStorageProductsData(
+        string $storageId,
+        array $products
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
