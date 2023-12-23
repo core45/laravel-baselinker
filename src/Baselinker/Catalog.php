@@ -5,7 +5,8 @@ namespace Core45\LaravelBaselinker\Baselinker;
 class Catalog extends LaravelBaselinker
 {
     /**
-     * The method allows to create a price group in BaseLinker storage. Providing a price group ID will update the existing price group. Such price groups may be later assigned in addInventory method.
+     * The method allows to create a price group in BaseLinker storage.
+     * Providing a price group ID will update the existing price group. Such price groups may be later assigned in addInventory method.
      *
      * @param string $name
      * @param string $description
