@@ -14,7 +14,11 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=addInventoryPriceGroup
      */
-    public function addInventoryPriceGroup(string $name, string $description, string $currency)
+    public function addInventoryPriceGroup(
+        string $name,
+        string $description,
+        string $currency
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -67,15 +71,23 @@ class Catalog extends LaravelBaselinker
      * @param string $name
      * @param string $description
      * @param bool $stockEdition Is manual editing of stocks permitted. A false value means that you can only edit your stock through the API.
+     * @param int|null $warehouseId Warehouse ID. The list of identifiers can be retrieved using the method getInventoryWarehouses. Optional.
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
      *
      * @see https://api.baselinker.com/?method=addInventoryWarehouse
      */
-    public function addInventoryWarehouse(string $name, string $description, bool $stockEdition = false)
+    public function addInventoryWarehouse(
+        string $name,
+        string $description,
+        bool $stockEdition = false,
+        ?int $warehouseId = null
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
+                'warehouse_id' => $warehouseId,
                 'name' => $name,
                 'description' => $description,
                 'stock_edition' => $stockEdition
@@ -131,6 +143,7 @@ class Catalog extends LaravelBaselinker
      * @param array $warehouses An array of warehouse identifiers available in the catalogue. The list of warehouse identifiers can be retrieved using the getInventoryWarehouses API method. The format of the identifier should be as follows: "[type:bl|shop|warehouse]_[id:int]". (e.g. "shop_2445")
      * @param string $defaultWarehouse Identifier of the warehouse default for the catalogue. The identifier must be included in the "warehouses" parameter.
      * @param bool $reservations Does this catalogue support reservations
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
      *
      * Example:
@@ -179,7 +192,7 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=deleteInventory
      */
-    public function deleteInventory( int $inventoryId)
+    public function deleteInventory(int $inventoryId)
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -222,7 +235,12 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=addInventoryCategory
      */
-    public function addInventoryCategory(string $name, int $parentId = 0, ?int $inventoryId = null, ?int $categoryId = null)
+    public function addInventoryCategory(
+        string $name,
+        int $parentId = 0,
+        ?int $inventoryId = null,
+        ?int $categoryId = null
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -286,7 +304,10 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=addInventoryManufacturer
      */
-    public function addInventoryManufacturer(?int $manufacturerId = null, string $name)
+    public function addInventoryManufacturer(
+        ?int $manufacturerId = null,
+        string $name
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -542,7 +563,10 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getInventoryProductsData
      */
-    public function getInventoryProductsData(int $inventoryId, array $products)
+    public function getInventoryProductsData(
+        int $inventoryId,
+        array $products
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -621,7 +645,10 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getInventoryProductsListTranslated
      */
-    public function getInventoryProductsStock(int $inventoryId, ?int $page)
+    public function getInventoryProductsStock(
+        int $inventoryId,
+        ?int $page
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -648,7 +675,10 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getInventoryProductsListTranslated
      */
-    public function updateInventoryProductsStock(int $inventoryId, array $products)
+    public function updateInventoryProductsStock(
+        int $inventoryId,
+        array $products
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -672,7 +702,10 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/index.php?method=getInventoryProductsPrices
      */
-    public function getInventoryProductsPrices(int $inventoryId, ?int $page)
+    public function getInventoryProductsPrices(
+        int $inventoryId,
+        ?int $page
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -697,7 +730,10 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/index.php?method=updateInventoryProductsPrices
      */
-    public function updateInventoryProductsPrices(int $inventoryId, array $products)
+    public function updateInventoryProductsPrices(
+        int $inventoryId,
+        array $products
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
@@ -768,7 +804,10 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/index.php?method=runProductMacroTrigger
      */
-    public function runProductMacroTrigger(int $productId, int $triggerId)
+    public function runProductMacroTrigger(
+        int $productId,
+        int $triggerId
+    )
     {
         return $this->makeRequest([
             'method' => __FUNCTION__,
