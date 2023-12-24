@@ -36,7 +36,7 @@ class Shipment extends LaravelBaselinker
      * "height":"25",
      * ]
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->createPackage()
@@ -51,7 +51,7 @@ class Shipment extends LaravelBaselinker
         ?int $accountId = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -61,6 +61,8 @@ class Shipment extends LaravelBaselinker
                 'packages' => $packages,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -72,7 +74,7 @@ class Shipment extends LaravelBaselinker
      * @param string $pickupDate Date of dispatch (unix time format)
      * @param bool $returnShipment (optional, false by default) Marks package as return shipment
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->createPackageManual(6910995, 'dpd', '123456789', '1622505600', false)
@@ -87,7 +89,7 @@ class Shipment extends LaravelBaselinker
         bool $returnShipment = false,
     )
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -97,11 +99,13 @@ class Shipment extends LaravelBaselinker
                 'return_shipment' => $returnShipment,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**The method allows you to retrieve a list of available couriers.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getCouriersList()
@@ -110,16 +114,18 @@ class Shipment extends LaravelBaselinker
      */
     public function getCouriersList()
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows you to retrieve the form fields for creating shipments for the selected courier.
      *
      * @param string $courierCode
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getCourierFields('dpd')
@@ -128,12 +134,14 @@ class Shipment extends LaravelBaselinker
      */
     public function getCourierFields(string $courierCode)
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -169,7 +177,7 @@ class Shipment extends LaravelBaselinker
      * "height":"25",
      * ]
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=getCourierServices
      */
@@ -181,7 +189,7 @@ class Shipment extends LaravelBaselinker
         ?int $accountId = null,
     )
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -191,13 +199,15 @@ class Shipment extends LaravelBaselinker
                 'packages' => $packages,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows you to retrieve the list of accounts connected to a given courier.
      *
      * @param string $courierCode
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getCourierAccounts('pkwid')
@@ -208,12 +218,14 @@ class Shipment extends LaravelBaselinker
         string $courierCode,
     )
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -223,7 +235,7 @@ class Shipment extends LaravelBaselinker
      * @param int $packageId
      * @param string|null $packageNumber
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getLabel('dpd', 123456789')
@@ -234,7 +246,7 @@ class Shipment extends LaravelBaselinker
         ?string $packageNumber = null,
     )
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -242,6 +254,8 @@ class Shipment extends LaravelBaselinker
                 'package_number' => $packageNumber,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -252,7 +266,7 @@ class Shipment extends LaravelBaselinker
      * @param array|null $packageNumbers Array of shipments number (consignment number), optional if package_ids was provided
      * @param int|null $accountId Courier API account id for the courier accounts retrieved from the request getCourierAccounts
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getProtocol('raben', [123456789,123456789], null) //when shipment Ids are provided
@@ -267,7 +281,7 @@ class Shipment extends LaravelBaselinker
         ?int $accountId = null,
     )
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -276,13 +290,15 @@ class Shipment extends LaravelBaselinker
                 'account_id' => $accountId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows you to download shipments previously created for the selected order.
      *
      * @param int $orderId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getOrderPackages(6910995)
@@ -291,19 +307,21 @@ class Shipment extends LaravelBaselinker
      */
     public function getOrderPackages(int $orderId)
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows you to retrieve the history of the status list of the given shipments. Maximum 100 shipments at a time
      *
      * @param array $packageIds
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getCourierPackagesStatusHistory([123456789,123456789])
@@ -312,12 +330,14 @@ class Shipment extends LaravelBaselinker
      */
     public function getCourierPackagesStatusHistory(array $packageIds)
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'package_ids' => $packageIds,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -329,7 +349,7 @@ class Shipment extends LaravelBaselinker
      * @param string|null $packageNumber Shipping number (consignment number), optional if package_id was provided
      * @param bool $forceDelete (optional, false by default) Forcing a shipment to be removed from BaseLinker database in the case of an error with the removal of the shipment in the courier API.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->deleteCourierPackage('dpd', 123456789)
@@ -343,7 +363,7 @@ class Shipment extends LaravelBaselinker
         bool $forceDelete = false,
     )
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -352,6 +372,8 @@ class Shipment extends LaravelBaselinker
                 'force_delete' => $forceDelete,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -376,7 +398,7 @@ class Shipment extends LaravelBaselinker
      * ]
      *
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      */
     public function requestParcelPickup(
         string $courierCode,
@@ -386,7 +408,7 @@ class Shipment extends LaravelBaselinker
         ?array $fields = null,
     )
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -396,13 +418,15 @@ class Shipment extends LaravelBaselinker
                 'fields' => $fields,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows you to retrieve additional fields for a parcel pickup request.
      *
      * @param string $courierCode
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getRequestParcelPickupFields('dpd')
@@ -411,11 +435,13 @@ class Shipment extends LaravelBaselinker
      */
     public function getRequestParcelPickupFields(string $courierCode)
     {
-        return $this->makeRequest([
+        $response =  $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
             ]),
         ]);
+
+        return $response->json();
     }
 }

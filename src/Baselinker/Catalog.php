@@ -11,7 +11,8 @@ class Catalog extends LaravelBaselinker
      * @param string $name
      * @param string $description
      * @param string $currency
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     *
+     * @return array
      *
      * @see https://api.baselinker.com/?method=addInventoryPriceGroup
      */
@@ -21,7 +22,7 @@ class Catalog extends LaravelBaselinker
         string $currency
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'name' => $name,
@@ -29,38 +30,44 @@ class Catalog extends LaravelBaselinker
                 'currency' => $currency
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to delete a price group from BaseLinker storage.
      *
      * @param int $priceGroupId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=deleteInventoryPriceGroup
      */
     public function deleteInventoryPriceGroup(int $priceGroupId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'price_group_id' => $priceGroupId
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to get a list of price groups from BaseLinker storage.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=getInventoryPriceGroups
      */
     public function getInventoryPriceGroups()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -74,7 +81,7 @@ class Catalog extends LaravelBaselinker
      * @param bool $stockEdition Is manual editing of stocks permitted. A false value means that you can only edit your stock through the API.
      * @param int|null $warehouseId Warehouse ID. The list of identifiers can be retrieved using the method getInventoryWarehouses. Optional.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=addInventoryWarehouse
      */
@@ -85,7 +92,7 @@ class Catalog extends LaravelBaselinker
         ?int $warehouseId = null
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'warehouse_id' => $warehouseId,
@@ -94,6 +101,8 @@ class Catalog extends LaravelBaselinker
                 'stock_edition' => $stockEdition
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -101,33 +110,37 @@ class Catalog extends LaravelBaselinker
      * The method does not allow deleting warehouses created automatically for the purpose of keeping external stocks of shops, wholesalers etc.
      *
      * @param int $warehouseId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=deleteInventoryWarehouse
      */
     public function deleteInventoryWarehouse(int $warehouseId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'warehouse_id' => $warehouseId
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to get a list of warehouses from BaseLinker storage.
      * The method does not return warehouses created automatically for the purpose of keeping external stocks of shops, wholesalers etc.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=getInventoryWarehouses
      */
     public function getInventoryWarehouses()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -145,7 +158,7 @@ class Catalog extends LaravelBaselinker
      * @param string $defaultWarehouse Identifier of the warehouse default for the catalogue. The identifier must be included in the "warehouses" parameter.
      * @param bool $reservations Does this catalogue support reservations
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->addInventory('Inventory 2', 'Cool inventory no. 2', ['en', 'pl'], 'en', [18704, 18705], 18705, ['bl_19464', 'bl_19580'], 'bl_19464', true);
@@ -165,7 +178,7 @@ class Catalog extends LaravelBaselinker
         ?int $inventoryId = null
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -180,13 +193,15 @@ class Catalog extends LaravelBaselinker
                 'reservations' => $reservations,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to delete a catalogue from BaseLinker storage.
      *
      * @param int $inventoryId Catalog ID. The list of identifiers can be retrieved using the method getInventories. Optional.
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->deleteInventory(18705);
@@ -195,18 +210,20 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventory(int $inventoryId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to get a list of catalogues from BaseLinker storage.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventories();
@@ -215,9 +232,11 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventories()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -228,7 +247,7 @@ class Catalog extends LaravelBaselinker
      * @param int|null $parentId
      * @param int|null $inventoryId
      * @param int|null $categoryId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->addInventoryCategory('Category 1', null, 18705, 18705);
@@ -243,7 +262,7 @@ class Catalog extends LaravelBaselinker
         ?int $categoryId = null
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -252,13 +271,15 @@ class Catalog extends LaravelBaselinker
                 'parent_id' => $parentId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to delete a category from BaseLinker storage.
      *
      * @param int $categoryId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->deleteInventoryCategory(18705);
@@ -267,18 +288,20 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryCategory(int $categoryId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'category_id' => $categoryId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to get a list of categories from BaseLinker storage.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryCategories();
@@ -287,9 +310,11 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryCategories()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -298,7 +323,7 @@ class Catalog extends LaravelBaselinker
      *
      * @param int|null $manufacturerId
      * @param string $name
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->addInventoryManufacturer(null, 'Manufacturer 1');
@@ -310,20 +335,22 @@ class Catalog extends LaravelBaselinker
         string $name
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'manufacturer_id' => $manufacturerId,
                 'name' => $name,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to delete a manufacturer from BaseLinker storage.
      *
      * @param int $manufacturerId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->deleteInventoryManufacturer(18705);
@@ -332,18 +359,20 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryManufacturer(int $manufacturerId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'manufacturer_id' => $manufacturerId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to get a list of manufacturers from BaseLinker storage.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryManufacturers();
@@ -352,15 +381,17 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryManufacturers()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows you to retrieve a list of extra fields for a BaseLinker catalog.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryExtraFields();
@@ -369,9 +400,11 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryExtraFields()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -379,7 +412,7 @@ class Catalog extends LaravelBaselinker
      * The returned data contains a list of accounts for each integration and a list of languages supported by the integration
      *
      * @param int $inventoryId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryExtraFields(123);
@@ -388,19 +421,21 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryIntegrations(int $inventoryId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method returns a list of product text fields that can be overwritten for specific integration.
      *
      * @param int $inventoryId Catalog ID. The list of identifiers can be retrieved by the getInventories method (inventory_id field).
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryIntegrations(123);
@@ -409,12 +444,14 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryAvailableTextFieldKeys(int $inventoryId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -474,7 +511,7 @@ class Catalog extends LaravelBaselinker
      * @param array $links An array containing product links to external warehouses (e.g. shops, wholesalers). Each element of the array is a list in which the key is the identifier of the external warehouse in the format "[type:shop|warehouse]_[id:int]". (e.g. "shop_2445"). The warehouse identifiers can be retrieved with the getStoragesList method. The value is an array containing the fields listed below.
      * @param array $bundleProducts A list containing information about the products included in the bundle, where the key is the identifier of the product included in the bundle, and the value is the number of pieces of this product in the bundle. Subproducts can only be defined if the added/edited product is a bundle (is_bundle = true).
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      *
      * @see https://api.baselinker.com/?method=addInventoryProduct
@@ -503,7 +540,7 @@ class Catalog extends LaravelBaselinker
         ?array $bundleProducts = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -529,13 +566,15 @@ class Catalog extends LaravelBaselinker
                 'bundle_products' => $bundleProducts,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to delete a product from BaseLinker storage.
      *
      * @param int $productId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->deleteInventoryProduct(18705);
@@ -544,12 +583,14 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryProduct(int $productId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'product_id' => $productId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -557,7 +598,7 @@ class Catalog extends LaravelBaselinker
      *
      * @param int $inventoryId
      * @param array $products
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryProductsData(18705, [18705, 18706]);
@@ -569,13 +610,15 @@ class Catalog extends LaravelBaselinker
         array $products
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'products' => $products,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -593,7 +636,7 @@ class Catalog extends LaravelBaselinker
      * @param int|null $filterStockTo
      * @param int|null $page
      * @param string|null $filterSort
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryProductsList(18705, null, null, null, null, null, null, null, null, null, null, null);
@@ -615,7 +658,7 @@ class Catalog extends LaravelBaselinker
         ?string $filterSort = null
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -632,6 +675,8 @@ class Catalog extends LaravelBaselinker
                 'filter_sort' => $filterSort,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -639,7 +684,7 @@ class Catalog extends LaravelBaselinker
      *
      * @param int $inventoryId
      * @param int|null $page
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryProductsListTranslated(18705);
@@ -651,13 +696,15 @@ class Catalog extends LaravelBaselinker
         ?int $page
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'page' => $page,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -669,7 +716,7 @@ class Catalog extends LaravelBaselinker
      *
      * Stocks cannot be assigned to the warehouses created automatically for purposes of keeping external stocks (shops, wholesalers, etc.).
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryProductsListTranslated(18705, [18705, 18706]);
@@ -681,13 +728,15 @@ class Catalog extends LaravelBaselinker
         array $products
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'products' => $products,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -696,7 +745,7 @@ class Catalog extends LaravelBaselinker
      * @param int $inventoryId Catalog ID. The list of identifiers can be retrieved using the method getInventories.
      * @param int $page (optional) Results paging (1000 products per page for BaseLinker warehouse)
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInventoryProductsPrices(18705);
@@ -708,13 +757,15 @@ class Catalog extends LaravelBaselinker
         ?int $page
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'page' => $page,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -724,7 +775,7 @@ class Catalog extends LaravelBaselinker
      * @param array $products An array of products, where the key is a product ID and the value is a list of prices. When determining the variant price, provide variant ID as a product ID.
      * In the prices array the key should be the price group ID and the value - gross price for that price group. The list of price group identifiers can be retrieved using the getInventoryPriceGroups method.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->updateInventoryProductsPrices(307, [2685 => [105 => 33.70, 106 => 34.70], 2068 => [105 => 35.23, 106 => 54.45]);
@@ -736,13 +787,15 @@ class Catalog extends LaravelBaselinker
         array $products
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'products' => $products,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -766,6 +819,8 @@ class Catalog extends LaravelBaselinker
      * @param string|null $sort (optional) Type of log sorting. Possible "ASC" values ( ascending from date), "DESC" (descending after the date). By default the sorting is done in ascending order.
      * @param int|null $page (optional) Results paging (100 product editions per page).
      *
+     * @return array
+     *
      * Example:
      * ->getInventoryProductLogs(18705, 1592904594);
      *
@@ -780,7 +835,7 @@ class Catalog extends LaravelBaselinker
         ?int $page = null
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'product_id' => $productId,
@@ -791,6 +846,8 @@ class Catalog extends LaravelBaselinker
                 'page' => $page,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -798,7 +855,8 @@ class Catalog extends LaravelBaselinker
      *
      * @param int $productId
      * @param int $triggerId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     *
+     * @return array
      *
      * Example:
      * ->runProductMacroTrigger(18705, 1234);
@@ -810,12 +868,14 @@ class Catalog extends LaravelBaselinker
         int $triggerId
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'product_id' => $productId,
                 'trigger_id' => $triggerId,
             ]),
         ]);
+
+        return $response->json();
     }
 }

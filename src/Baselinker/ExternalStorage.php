@@ -7,7 +7,7 @@ class ExternalStorage extends LaravelBaselinker
     /**
      * The method allows you to retrieve a list of available external storages (shops, wholesalers) that can be referenced via API.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getExternalStoragesList()
@@ -16,16 +16,18 @@ class ExternalStorage extends LaravelBaselinker
      */
     public function getExternalStoragesList()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows you to retrieve a list of categories from the selected external storage (shop, wholesaler).
      *
      * @param string $storageId
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getExternalStorageCategories('bl_19464')
@@ -34,12 +36,14 @@ class ExternalStorage extends LaravelBaselinker
      */
     public function getExternalStorageCategories(string $storageId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -48,7 +52,7 @@ class ExternalStorage extends LaravelBaselinker
      * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
      * @param array $products An array of product ID numbers to download.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getExternalStorageProductsData('bl_19464', [18755])
@@ -60,13 +64,15 @@ class ExternalStorage extends LaravelBaselinker
         array $products
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
                 'products' => $products,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -86,7 +92,7 @@ class ExternalStorage extends LaravelBaselinker
      * @param int|null $filterAvailable (optional) displaying only products marked as available (value 1) or not available (0) or all (empty value)
      * @param int|null $page (optional) Results paging
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=getExternalStorageProductsList
      */
@@ -106,7 +112,7 @@ class ExternalStorage extends LaravelBaselinker
         ?int $page = null
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
@@ -124,6 +130,8 @@ class ExternalStorage extends LaravelBaselinker
                 'page' => $page,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -132,7 +140,7 @@ class ExternalStorage extends LaravelBaselinker
      * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
      * @param int|null $page (optional) Results paging
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=getExternalStorageProductsQuantity
      */
@@ -141,13 +149,15 @@ class ExternalStorage extends LaravelBaselinker
         ?int $page = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
                 'page' => $page,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -156,7 +166,7 @@ class ExternalStorage extends LaravelBaselinker
      * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
      * @param int|null $page (optional) Results paging
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getExternalStorageProductsPrices('shop_2445')
@@ -168,13 +178,15 @@ class ExternalStorage extends LaravelBaselinker
         ?int $page = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
                 'page' => $page,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -186,7 +198,7 @@ class ExternalStorage extends LaravelBaselinker
      * 1 => variant ID number (0 if the main product is changed, not the variant) (int)
      * 2 => Stock quantity (int)
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->updateExternalStorageProductsQuantity('shop_2445', [0 => [1081730, 0, 100], 1 => [1081730, 1734642, 150]])
@@ -198,12 +210,14 @@ class ExternalStorage extends LaravelBaselinker
         array $products,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
                 'products' => $products,
             ]),
         ]);
+
+        return $response->json();
     }
 }

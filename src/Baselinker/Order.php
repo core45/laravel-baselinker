@@ -11,7 +11,7 @@ class Order extends LaravelBaselinker
      * @param array $logsTypes Event ID List
      * @param int|null $orderId Order ID number
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getJournalList(654258, [7, 13])
@@ -22,7 +22,7 @@ class Order extends LaravelBaselinker
         ?int $orderId = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'last_log_id' => $lastLogId,
@@ -30,6 +30,8 @@ class Order extends LaravelBaselinker
                 'order_id' => $orderId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -97,7 +99,7 @@ class Order extends LaravelBaselinker
      * quantity (int) - Quantity of pieces
      * weight (float) - Single item weight
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/?method=addOrder
      */
@@ -143,7 +145,7 @@ class Order extends LaravelBaselinker
         array $products,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_status_id' => $orderStatusId,
@@ -187,6 +189,8 @@ class Order extends LaravelBaselinker
                 'products' => $products,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -194,7 +198,7 @@ class Order extends LaravelBaselinker
      * Order sources are grouped by their type that corresponds to a field order_source from the getOrders method.
      * Available source types are "personal", "shop" or "marketplace_code" e.g. "ebay", "amazon", "ceneo", "emag", "allegro", etc.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getOrderSources()
@@ -203,16 +207,18 @@ class Order extends LaravelBaselinker
      */
     public function getOrderSources()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method returns extra fields defined for the orders. Values of those fields can be set with method setOrderFields.
      * In order to retrieve values of those fields set parameter include_custom_extra_fields in method getOrders
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getOrderExtraFields()
@@ -221,9 +227,11 @@ class Order extends LaravelBaselinker
      */
     public function getOrderExtraFields()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -253,7 +261,7 @@ class Order extends LaravelBaselinker
      * @param string|null $filterOrderSource (optional) Filtering of order lists by order source, for instance "ebay", "amazon" (displays only orders come from given source). The list of order sources can be retrieved with getOrderSources method.
      * @param string|null $filterOrderSourceId (optional) Filtering of order lists by order source identifier, for instance "2523" (displays only orders come from order source defined in "filter_order_source" identified by given order source identifier). Filtering by order source indentifier requires "filter_order_source" to be set prior. The list of order source identifiers can be retrieved with getOrderSources method.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      */
     public function getOrders(
         ?int $orderId = null,
@@ -268,7 +276,7 @@ class Order extends LaravelBaselinker
         ?string $filterOrderSourceId = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -283,6 +291,8 @@ class Order extends LaravelBaselinker
                 'filter_order_source_id' => $filterOrderSourceId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -290,18 +300,20 @@ class Order extends LaravelBaselinker
      *
      * @param int $orderId
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/index.php?method=getOrderTransactionDetails
      */
     public function getOrderTransactionDetails(int $orderId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -309,18 +321,20 @@ class Order extends LaravelBaselinker
      *
      * @param string $email varchar(50)	The e-mail address we search for in orders.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/index.php?method=getOrdersByEmail
      */
     public function getOrdersByEmail(string $email)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'email' => $email,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -328,18 +342,20 @@ class Order extends LaravelBaselinker
      *
      * @param string $phone varchar(50)	The phone number we search for in orders.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/index.php?method=getOrdersByPhone
      */
     public function getOrdersByPhone(string $phone)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'phone' => $phone,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -355,7 +371,7 @@ class Order extends LaravelBaselinker
      * - "OO": VAT reverse charge
      * - value: number from range 0-100
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->addInvoice('3754894', '15')
@@ -367,7 +383,7 @@ class Order extends LaravelBaselinker
         ?string $vatRate = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -375,6 +391,8 @@ class Order extends LaravelBaselinker
                 'vat_rate' => $vatRate,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -389,7 +407,7 @@ class Order extends LaravelBaselinker
      * @param int|null $seriesId (optional) numbering series ID that allows filtering after the invoice numbering series.
      * @param bool|null $getExternalInvoices If set to 'false' then omits from the results invoices that already have an external invoice file uploaded by addOrderInvoiceFile method (useful for ERP integrations uploading invoice files to BaseLinker)
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInvoices(null, null, 1407341754)
@@ -405,7 +423,7 @@ class Order extends LaravelBaselinker
         ?bool $getExternalInvoices = true,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'invoice_id' => $invoiceId,
@@ -416,34 +434,40 @@ class Order extends LaravelBaselinker
                 'get_external_invoices' => $getExternalInvoices,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows to download a series of invoice/receipt numbering.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/index.php?method=getSeries
      */
     public function getSeries()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+
+        return $response->json();
     }
 
     /**
      * The method allows you to download order statuses created by the customer in the BaseLinker order manager.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/index.php?method=getOrderStatusList
      */
     public function getOrderStatusList()
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -452,7 +476,7 @@ class Order extends LaravelBaselinker
      *
      * @param int $orderId
      * @param bool $showFullHistory
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getOrderPaymentsHistory(3754894)
@@ -464,13 +488,15 @@ class Order extends LaravelBaselinker
         bool $showFullHistory = false,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'show_full_history' => $showFullHistory,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -482,7 +508,7 @@ class Order extends LaravelBaselinker
      * @param int|null $seriesId (optional) The numbering series ID allows filtering by the receipt numbering series. Using multiple series numbering for receipts is recommended when the user has multiple fiscal printers. Each fiscal printer should have a separate series.
      * @param int|null $idFrom (optional) ID from which logs are to be retrieved. [default=0]
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getNewReceipts(0, 1)
@@ -494,13 +520,15 @@ class Order extends LaravelBaselinker
         int $idFrom = 0,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'series_id' => $seriesId,
                 'id_from' => $idFrom,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -510,7 +538,7 @@ class Order extends LaravelBaselinker
      * @param int $receiptId
      * @param int $orderId
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getReceipt(143476260)
@@ -522,13 +550,15 @@ class Order extends LaravelBaselinker
         ?int $receiptId = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'receipt_id' => $receiptId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -580,7 +610,7 @@ class Order extends LaravelBaselinker
      * @param string|null $pickState Flag indicating the status of the order products collection (1 - all products have been collected, 0 - not all products have been collected)
      * @param string|null $packState Flag indicating the status of the order products packing (1 - all products have been packed, 0 - not all products have been packed)
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->setOrderFields(3754894)
@@ -626,7 +656,7 @@ class Order extends LaravelBaselinker
         ?string $packState = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -667,6 +697,8 @@ class Order extends LaravelBaselinker
                 'pack_state' => $packState,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -691,7 +723,7 @@ class Order extends LaravelBaselinker
      * @param int $quantity
      * @param float|null $weight
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/index.php?method=addOrderProduct
      */
@@ -714,7 +746,7 @@ class Order extends LaravelBaselinker
         ?float $weight = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -735,6 +767,8 @@ class Order extends LaravelBaselinker
                 'weight' => $weight,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -760,7 +794,7 @@ class Order extends LaravelBaselinker
      * @param float $taxRate VAT tax rate e.g. "23", (value from range 0-100, EXCEPTION values: "-1" for "EXPT"/"ZW" exempt from VAT, "-0.02" for "NP" annotation, "-0.03" for "OO" VAT reverse charge)* @param int $quantity
      * @param float|null $weight
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * @see https://api.baselinker.com/index.php?method=setOrderProductFields
      */
@@ -784,7 +818,7 @@ class Order extends LaravelBaselinker
         ?float $weight = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -806,6 +840,8 @@ class Order extends LaravelBaselinker
                 'weight' => $weight,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -814,7 +850,7 @@ class Order extends LaravelBaselinker
      * @param int $orderId
      * @param int $orderProductId
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->deleteOrderProduct(3754894, 59157160)
@@ -826,13 +862,15 @@ class Order extends LaravelBaselinker
         int $orderProductId,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'order_product_id' => $orderProductId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -844,7 +882,7 @@ class Order extends LaravelBaselinker
      * @param string $paymentComment varchar(30)
      * @param string|null $externalPaymentId varchar(30) (optional) External payment identifier
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->setOrderPayment(3754894, 120.57, 1444736731, 'bank transfer mBank 12.10.2015')
@@ -857,7 +895,7 @@ class Order extends LaravelBaselinker
         ?string $externalPaymentId = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -867,6 +905,8 @@ class Order extends LaravelBaselinker
                 'external_payment_id' => $externalPaymentId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -875,7 +915,7 @@ class Order extends LaravelBaselinker
      * @param int $orderId
      * @param int $statusId
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->setOrderStatus(3754894, 34562)
@@ -887,13 +927,15 @@ class Order extends LaravelBaselinker
         int $statusId,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'status_id' => $statusId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -902,7 +944,7 @@ class Order extends LaravelBaselinker
      * @param array $orderIds
      * @param int $statusId Status ID number. The status list can be retrieved using getOrderStatusList.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->setOrderStatuses([3754894, 3754895], 2)
@@ -914,13 +956,15 @@ class Order extends LaravelBaselinker
         int $statusId,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_ids' => $orderIds,
                 'status_id' => $statusId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -932,7 +976,7 @@ class Order extends LaravelBaselinker
      * @param bool $printerError Flag indicating whether an error occurred during receipt printing (false by default)
      * @param string|null $printerName
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->setOrderReceipt(143476260, 'FV/2015/10/12/0001', 1444736731)
@@ -947,7 +991,7 @@ class Order extends LaravelBaselinker
         ?string $printerName = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'receipt_id' => $receiptId,
@@ -957,6 +1001,8 @@ class Order extends LaravelBaselinker
                 'printer_name' => $printerName,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -967,7 +1013,7 @@ class Order extends LaravelBaselinker
      * @param string $file Invoice PDF file in binary format encoded in base64, at the very beginning of the invoice string provide a prefix "data:" e.g. "data:4AAQSkSzkJRgABA[...]"
      * @param string|null $externalInvoiceNumber External system invoice number (overwrites BaseLinker invoice number)
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->addOrderInvoiceFile(143476260, 'data:4AAQSkZJRgABA[...]', 'FV/2015/10/12/0001')
@@ -980,7 +1026,7 @@ class Order extends LaravelBaselinker
         ?string $externalInvoiceNumber = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'invoice_id' => $invoiceId,
@@ -988,6 +1034,8 @@ class Order extends LaravelBaselinker
                 'external_invoice_number' => $externalInvoiceNumber,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -998,7 +1046,7 @@ class Order extends LaravelBaselinker
      * @param string $file Receipt PDF file in binary format encoded in base64, at the very beginning of the receipt string provide a prefix "data:" e.g. "data:4AAQSkSzkJRgABA[...]"
      * @param string|null $externalReceiptNumber External system receipt number (overwrites BaseLinker receipt number)
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->addOrderReceiptFile(143476260, 'data:4AAQSkZJRgABA[...]', 'FV/2015/10/12/0001')
@@ -1011,7 +1059,7 @@ class Order extends LaravelBaselinker
         ?string $externalReceiptNumber = null,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'receipt_id' => $receiptId,
@@ -1019,6 +1067,8 @@ class Order extends LaravelBaselinker
                 'external_receipt_number' => $externalReceiptNumber,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -1026,7 +1076,7 @@ class Order extends LaravelBaselinker
      *
      * @param int $invoiceId BaseLinker invoice identifier
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->getInvoiceFile(153845)
@@ -1035,12 +1085,14 @@ class Order extends LaravelBaselinker
      */
     public function getInvoiceFile(int $invoiceId)
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'invoice_id' => $invoiceId,
             ]),
         ]);
+
+        return $response->json();
     }
 
     /**
@@ -1049,7 +1101,7 @@ class Order extends LaravelBaselinker
      * @param int $orderId
      * @param int $triggerId
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array
      *
      * Example:
      * ->runOrderMacroTrigger(153845, 12413)
@@ -1061,12 +1113,14 @@ class Order extends LaravelBaselinker
         int $triggerId,
     )
     {
-        return $this->makeRequest([
+        $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'trigger_id' => $triggerId,
             ]),
         ]);
+
+        return $response->json();
     }
 }
