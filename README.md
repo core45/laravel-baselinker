@@ -53,4 +53,4 @@ $result = $catalog->addInventoryPriceGroup('For Spain', 'Price group for Spain',
 
 https://api.baselinker.com
 
-If you find any errors or would like to help with improving and maintaining the package please live the comment.
+If you find any errors or would like to help with improving and maintaining the package please leave the comment.
