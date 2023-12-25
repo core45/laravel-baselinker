@@ -308,10 +308,13 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getInventoryCategories
      */
-    public function getInventoryCategories()
+    public function getInventoryCategories(?int $inventoryId = null)
     {
         $response = $this->makeRequest([
-            'method' => __FUNCTION__
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'inventory_id' => $inventoryId,
+            ]),
         ]);
 
         return $response->json();
