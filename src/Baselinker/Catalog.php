@@ -301,6 +301,10 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to get a list of categories from BaseLinker storage.
      *
+     * @param int|null $inventoryId Catalog ID. The list of identifiers can be retrieved by the getInventories method (inventory_id field).
+     * To retrieve categories available for all catalogs created in BaseLinker, this field should be omitted.
+     * The categories which are not assigned to any inventory will be returned in every inventory because they are considered common.
+     *
      * @return array
      *
      * Example:
