@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Baselinker;
 
@@ -8,10 +10,7 @@ class Catalog extends LaravelBaselinker
      * The method allows to create a price group in BaseLinker storage.
      * Providing a price group ID will update the existing price group.
      *
-     * @param string $name
-     * @param string $description
-     * @param string $currency
-     * @param int|null $priceGroupId Price group ID for updating existing group
+     * @param  int|null  $priceGroupId  Price group ID for updating existing group
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryPriceGroup
@@ -36,7 +35,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a price group from BaseLinker storage.
      *
-     * @param int $priceGroupId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=deleteInventoryPriceGroup
@@ -69,10 +67,8 @@ class Catalog extends LaravelBaselinker
      * The method allows you to add a new warehouse available in BaseLinker catalogues.
      * Adding a warehouse with the same identifier again will cause updates of the previously saved warehouse.
      *
-     * @param string $name
-     * @param string $description
-     * @param bool $stockEdition Is manual editing of stocks permitted
-     * @param int|null $warehouseId Warehouse ID for updating existing warehouse
+     * @param  bool  $stockEdition  Is manual editing of stocks permitted
+     * @param  int|null  $warehouseId  Warehouse ID for updating existing warehouse
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryWarehouse
@@ -97,7 +93,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a warehouse from BaseLinker storage.
      *
-     * @param int $warehouseId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=deleteInventoryWarehouse
@@ -130,16 +125,14 @@ class Catalog extends LaravelBaselinker
      * The method allows you to add the BaseLinker catalogs.
      * Adding a catalog with the same identifier again will cause updates of the previously saved catalog.
      *
-     * @param string $name
-     * @param string $description
-     * @param array<int, string> $languages
-     * @param string $defaultLanguage Default catalogue language
-     * @param array<int, int> $priceGroups Array of price group identifiers
-     * @param int $defaultPriceGroup ID of the default price group
-     * @param array<int, string> $warehouses Array of warehouse identifiers (e.g. "bl_19464")
-     * @param string $defaultWarehouse Default warehouse identifier
-     * @param bool $reservations Does this catalogue support reservations
-     * @param int|null $inventoryId Catalog ID for updating existing catalog
+     * @param  array<int, string>  $languages
+     * @param  string  $defaultLanguage  Default catalogue language
+     * @param  array<int, int>  $priceGroups  Array of price group identifiers
+     * @param  int  $defaultPriceGroup  ID of the default price group
+     * @param  array<int, string>  $warehouses  Array of warehouse identifiers (e.g. "bl_19464")
+     * @param  string  $defaultWarehouse  Default warehouse identifier
+     * @param  bool  $reservations  Does this catalogue support reservations
+     * @param  int|null  $inventoryId  Catalog ID for updating existing catalog
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventory
@@ -176,17 +169,19 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a catalogue from BaseLinker storage.
      *
-     * @param int $inventoryId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=deleteInventory
      */
+    public function deleteInventory(int $inventoryId): array
+    {
         return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
             ]),
         ]);
+    }
 
     /**
      * The method allows to get a list of catalogues from BaseLinker storage.
@@ -206,10 +201,9 @@ class Catalog extends LaravelBaselinker
      * The method allows you to add a new category in the BaseLinker catalogues.
      * Adding a category with the same identifier again will cause updates of the previously saved category.
      *
-     * @param string $name
-     * @param int $parentId Parent category ID (0 for root category)
-     * @param int|null $inventoryId Catalog ID
-     * @param int|null $categoryId Category ID for updating existing category
+     * @param  int  $parentId  Parent category ID (0 for root category)
+     * @param  int|null  $inventoryId  Catalog ID
+     * @param  int|null  $categoryId  Category ID for updating existing category
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryCategory
@@ -234,7 +228,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a category from BaseLinker storage.
      *
-     * @param int $categoryId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=deleteInventoryCategory
@@ -252,7 +245,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to get a list of categories from BaseLinker storage.
      *
-     * @param int|null $inventoryId Catalog ID (omit to retrieve categories for all catalogs)
+     * @param  int|null  $inventoryId  Catalog ID (omit to retrieve categories for all catalogs)
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryCategories
@@ -274,16 +267,19 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getInventoryTags
      */
+    public function getInventoryTags(): array
+    {
         return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+    }
 
     /**
      * The method allows you to add a new manufacturer in the BaseLinker catalogues.
      * Adding a manufacturer with the same identifier again will cause updates of the previously saved manufacturer.
      *
-     * @param string $name Manufacturer name
-     * @param int|null $manufacturerId Manufacturer ID for updating existing manufacturer
+     * @param  string  $name  Manufacturer name
+     * @param  int|null  $manufacturerId  Manufacturer ID for updating existing manufacturer
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryManufacturer
@@ -304,7 +300,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a manufacturer from BaseLinker storage.
      *
-     * @param int $manufacturerId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=deleteInventoryManufacturer
@@ -326,9 +321,12 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getInventoryManufacturers
      */
+    public function getInventoryManufacturers(): array
+    {
         return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
+    }
 
     /**
      * The method allows you to retrieve a list of extra fields for a BaseLinker catalog.
@@ -347,7 +345,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method returns a list of integrations where text values in the catalog can be overwritten.
      *
-     * @param int $inventoryId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryIntegrations
@@ -365,7 +362,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method returns a list of product text fields that can be overwritten for specific integration.
      *
-     * @param int $inventoryId Catalog ID
+     * @param  int  $inventoryId  Catalog ID
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryAvailableTextFieldKeys
@@ -384,27 +381,19 @@ class Catalog extends LaravelBaselinker
      * The method allows you to add a new product in the BaseLinker catalogues.
      * Adding a product with the same identifier again will cause updates of the previously saved product.
      *
-     * @param string $inventoryId Catalog ID
-     * @param array<string, mixed> $textFields Text fields (names, descriptions, etc.)
-     * @param string|null $productId Product ID for updating existing product
-     * @param string|null $parentId Parent product ID
-     * @param bool $isBundle Is the product a bundle
-     * @param string|null $ean
-     * @param string|null $sku
-     * @param float|null $taxRate VAT tax rate (0-100, -1 for exempt, -0.02 for NP, -0.03 for OO)
-     * @param float|null $weight
-     * @param float|null $height
-     * @param float|null $width
-     * @param float|null $length
-     * @param int $star Product star type (0-5)
-     * @param int|null $manufacturerId
-     * @param int|null $categoryId
-     * @param array<int, float>|null $prices Prices by price group ID
-     * @param array<string, int>|null $stock Stock by warehouse ID
-     * @param array<string, string>|null $locations Locations by warehouse ID
-     * @param array<int, string>|null $images Images (max 16)
-     * @param array<string, mixed>|null $links Links to external warehouses
-     * @param array<int, int>|null $bundleProducts Bundle product quantities
+     * @param  string  $inventoryId  Catalog ID
+     * @param  array<string, mixed>  $textFields  Text fields (names, descriptions, etc.)
+     * @param  string|null  $productId  Product ID for updating existing product
+     * @param  string|null  $parentId  Parent product ID
+     * @param  bool  $isBundle  Is the product a bundle
+     * @param  float|null  $taxRate  VAT tax rate (0-100, -1 for exempt, -0.02 for NP, -0.03 for OO)
+     * @param  int  $star  Product star type (0-5)
+     * @param  array<int, float>|null  $prices  Prices by price group ID
+     * @param  array<string, int>|null  $stock  Stock by warehouse ID
+     * @param  array<string, string>|null  $locations  Locations by warehouse ID
+     * @param  array<int, string>|null  $images  Images (max 16)
+     * @param  array<string, mixed>|null  $links  Links to external warehouses
+     * @param  array<int, int>|null  $bundleProducts  Bundle product quantities
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryProduct
@@ -463,7 +452,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a product from BaseLinker storage.
      *
-     * @param int $productId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=deleteInventoryProduct
@@ -481,8 +469,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows you to retrieve detailed data for selected products from the BaseLinker catalogue.
      *
-     * @param int $inventoryId
-     * @param array<int, int> $products Array of product IDs
+     * @param  array<int, int>  $products  Array of product IDs
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryProductsData
@@ -501,18 +488,8 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows you to retrieve a list of products from the BaseLinker catalogue.
      *
-     * @param int $inventoryId
-     * @param int|null $filterId
-     * @param int|null $filterCategoryId
-     * @param string|null $filterEan
-     * @param string|null $filterSku
-     * @param string|null $filterName
-     * @param float|null $filterPriceFrom
-     * @param float|null $filterPriceTo
-     * @param int|null $filterStockFrom
-     * @param int|null $filterStockTo
-     * @param int|null $page Results paging (1000 products per page)
-     * @param string|null $filterSort Sort order
+     * @param  int|null  $page  Results paging (1000 products per page)
+     * @param  string|null  $filterSort  Sort order
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryProductsList
@@ -553,8 +530,8 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to retrieve stock levels of products from BaseLinker catalogues.
      *
-     * @param int $inventoryId Catalog ID
-     * @param int|null $page Results paging (1000 products per page)
+     * @param  int  $inventoryId  Catalog ID
+     * @param  int|null  $page  Results paging (1000 products per page)
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryProductsStock
@@ -573,8 +550,8 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to update stock levels of products in BaseLinker catalogues.
      *
-     * @param int $inventoryId Catalog ID
-     * @param array<int, array<string, int>> $products Products with stock by warehouse ID
+     * @param  int  $inventoryId  Catalog ID
+     * @param  array<int, array<string, int>>  $products  Products with stock by warehouse ID
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=updateInventoryProductsStock
@@ -593,8 +570,8 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to retrieve the gross prices of products from BaseLinker catalogues.
      *
-     * @param int $inventoryId Catalog ID
-     * @param int|null $page Results paging (1000 products per page)
+     * @param  int  $inventoryId  Catalog ID
+     * @param  int|null  $page  Results paging (1000 products per page)
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryProductsPrices
@@ -613,8 +590,8 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to update the gross prices of products in BaseLinker catalogues.
      *
-     * @param int $inventoryId Catalog ID
-     * @param array<int, array<int, float>> $products Products with prices by price group ID
+     * @param  int  $inventoryId  Catalog ID
+     * @param  array<int, array<int, float>>  $products  Products with prices by price group ID
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=updateInventoryProductsPrices
@@ -633,12 +610,12 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to retrieve a list of events related to product changes in the BaseLinker catalog.
      *
-     * @param int $productId Product identifier (use variant ID for variant logs)
-     * @param int|null $dateFrom Unix timestamp
-     * @param int|null $dateTo Unix timestamp
-     * @param int|null $logType Event type (1=stock, 2=price, 3=create, 4=delete, 5=text, 6=location, 7=links, 8=gallery, 9=variant, 10=bundle)
-     * @param string|null $sort "ASC" or "DESC"
-     * @param int|null $page Results paging (100 entries per page)
+     * @param  int  $productId  Product identifier (use variant ID for variant logs)
+     * @param  int|null  $dateFrom  Unix timestamp
+     * @param  int|null  $dateTo  Unix timestamp
+     * @param  int|null  $logType  Event type (1=stock, 2=price, 3=create, 4=delete, 5=text, 6=location, 7=links, 8=gallery, 9=variant, 10=bundle)
+     * @param  string|null  $sort  "ASC" or "DESC"
+     * @param  int|null  $page  Results paging (100 entries per page)
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryProductLogs
@@ -667,8 +644,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows you to run a personal trigger for products automatic actions.
      *
-     * @param int $productId
-     * @param int $triggerId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=runProductMacroTrigger
@@ -689,13 +664,12 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to add an inventory document (e.g., goods receipt, goods issue).
      *
-     * @param int $inventoryId Catalog ID
-     * @param int $seriesId Document series ID
-     * @param string $type Document type (GR=goods receipt, GI=goods issue, II=internal issue, IR=internal receipt, MM=movement)
-     * @param string $warehouseId Warehouse ID (e.g., "bl_123")
-     * @param string|null $warehouseIdTarget Target warehouse ID (for MM type)
-     * @param string|null $description
-     * @param array<int, array<string, mixed>>|null $items Document items
+     * @param  int  $inventoryId  Catalog ID
+     * @param  int  $seriesId  Document series ID
+     * @param  string  $type  Document type (GR=goods receipt, GI=goods issue, II=internal issue, IR=internal receipt, MM=movement)
+     * @param  string  $warehouseId  Warehouse ID (e.g., "bl_123")
+     * @param  string|null  $warehouseIdTarget  Target warehouse ID (for MM type)
+     * @param  array<int, array<string, mixed>>|null  $items  Document items
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryDocument
@@ -726,7 +700,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to confirm an inventory document.
      *
-     * @param int $documentId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=setInventoryDocumentStatusConfirmed
@@ -744,12 +717,12 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to retrieve a list of inventory documents.
      *
-     * @param int|null $inventoryId Catalog ID
-     * @param int|null $documentId Specific document ID
-     * @param int|null $dateFrom Unix timestamp
-     * @param int|null $dateTo Unix timestamp
-     * @param string|null $type Document type filter
-     * @param int|null $page Results paging
+     * @param  int|null  $inventoryId  Catalog ID
+     * @param  int|null  $documentId  Specific document ID
+     * @param  int|null  $dateFrom  Unix timestamp
+     * @param  int|null  $dateTo  Unix timestamp
+     * @param  string|null  $type  Document type filter
+     * @param  int|null  $page  Results paging
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryDocuments
@@ -778,8 +751,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to retrieve items from an inventory document.
      *
-     * @param int $documentId
-     * @param int|null $page Results paging
+     * @param  int|null  $page  Results paging
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryDocumentItems
@@ -798,8 +770,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to add items to an inventory document.
      *
-     * @param int $documentId
-     * @param array<int, array<string, mixed>> $items
+     * @param  array<int, array<string, mixed>>  $items
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryDocumentItems
@@ -848,16 +819,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to add a supplier.
      *
-     * @param string $name
-     * @param string|null $code
-     * @param string|null $address
-     * @param string|null $city
-     * @param string|null $postcode
-     * @param string|null $country
-     * @param string|null $taxId
-     * @param string|null $email
-     * @param string|null $phone
-     * @param int|null $supplierId Supplier ID for updating existing supplier
+     * @param  int|null  $supplierId  Supplier ID for updating existing supplier
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventorySupplier
@@ -894,7 +856,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a supplier.
      *
-     * @param int $supplierId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=deleteInventorySupplier
@@ -926,16 +887,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to add a payer.
      *
-     * @param string $name
-     * @param string|null $code
-     * @param string|null $address
-     * @param string|null $city
-     * @param string|null $postcode
-     * @param string|null $country
-     * @param string|null $taxId
-     * @param string|null $email
-     * @param string|null $phone
-     * @param int|null $payerId Payer ID for updating existing payer
+     * @param  int|null  $payerId  Payer ID for updating existing payer
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryPayer
@@ -972,7 +924,6 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to delete a payer.
      *
-     * @param int $payerId
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=deleteInventoryPayer
@@ -992,13 +943,13 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to retrieve a list of purchase orders.
      *
-     * @param int|null $orderId Specific order ID
-     * @param int|null $dateFrom Unix timestamp
-     * @param int|null $dateTo Unix timestamp
-     * @param int|null $idFrom Order ID to start from
-     * @param int|null $supplierId Filter by supplier
-     * @param string|null $status Filter by status
-     * @param int|null $page Results paging
+     * @param  int|null  $orderId  Specific order ID
+     * @param  int|null  $dateFrom  Unix timestamp
+     * @param  int|null  $dateTo  Unix timestamp
+     * @param  int|null  $idFrom  Order ID to start from
+     * @param  int|null  $supplierId  Filter by supplier
+     * @param  string|null  $status  Filter by status
+     * @param  int|null  $page  Results paging
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryPurchaseOrders
@@ -1029,8 +980,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to retrieve items from a purchase order.
      *
-     * @param int $orderId
-     * @param int|null $page Results paging
+     * @param  int|null  $page  Results paging
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getInventoryPurchaseOrderItems
@@ -1063,14 +1013,13 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to add a purchase order.
      *
-     * @param int $inventoryId Catalog ID
-     * @param int $seriesId Series ID
-     * @param int $supplierId Supplier ID
-     * @param string $warehouseId Warehouse ID (e.g., "bl_123")
-     * @param string $currency Currency code (e.g., "EUR")
-     * @param string|null $description
-     * @param int|null $expectedDeliveryDate Unix timestamp
-     * @param array<int, array<string, mixed>>|null $items Order items
+     * @param  int  $inventoryId  Catalog ID
+     * @param  int  $seriesId  Series ID
+     * @param  int  $supplierId  Supplier ID
+     * @param  string  $warehouseId  Warehouse ID (e.g., "bl_123")
+     * @param  string  $currency  Currency code (e.g., "EUR")
+     * @param  int|null  $expectedDeliveryDate  Unix timestamp
+     * @param  array<int, array<string, mixed>>|null  $items  Order items
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryPurchaseOrder
@@ -1103,8 +1052,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to add items to a purchase order.
      *
-     * @param int $orderId
-     * @param array<int, array<string, mixed>> $items
+     * @param  array<int, array<string, mixed>>  $items
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addInventoryPurchaseOrderItems
@@ -1123,8 +1071,7 @@ class Catalog extends LaravelBaselinker
     /**
      * The method allows to change the status of a purchase order.
      *
-     * @param int $orderId
-     * @param string $status Status (draft, confirmed, sent, received, cancelled)
+     * @param  string  $status  Status (draft, confirmed, sent, received, cancelled)
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=setInventoryPurchaseOrderStatus

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker;
 
@@ -32,7 +34,6 @@ class BaselinkerServiceProvider extends ServiceProvider
             ], 'laravel-baselinker');
         }
     }
-
 
     /**
      * Get the services provided by the provider.

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker;
 
@@ -11,21 +13,21 @@ class Baselinker
 {
     public function catalog(): Catalog
     {
-        return new Catalog();
+        return new Catalog;
     }
 
     public function externalStorage(): ExternalStorage
     {
-        return new ExternalStorage();
+        return new ExternalStorage;
     }
 
     public function order(): Order
     {
-        return new Order();
+        return new Order;
     }
 
     public function shipment(): Shipment
     {
-        return new Shipment();
+        return new Shipment;
     }
 }

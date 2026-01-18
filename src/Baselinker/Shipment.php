@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Baselinker;
 
@@ -7,17 +9,16 @@ class Shipment extends LaravelBaselinker
     /**
      * The method createPackage allows you to create a shipment in the system of the selected courier.
      *
-     * @param int $orderId Order ID
-     * @param string $courierCode Courier code (retrieved from getCouriersList)
-     * @param array<int, array{id: string, value: string}> $fields List of form fields retrieved from getCourierFields
-     *                                                              For checkbox with multiple selection, send separate arrays:
-     *                                                              [["id" => "services", "value" => "sms"], ["id" => "services", "value" => "email"]]
-     * @param array<int, array<string, mixed>> $packages Array of packages. Weight of at least one package required.
-     *                                                    As a key use the field 'id' from packages_fields in getCourierFields response.
-     *                                                    Height, length, width in centimeters. Weight in kilograms.
-     *                                                    Example: [["weight" => "1", "height" => "25"]]
-     * @param int|null $accountId Courier API account id from getCourierAccounts. If blank, the first account will be used.
-     *
+     * @param  int  $orderId  Order ID
+     * @param  string  $courierCode  Courier code (retrieved from getCouriersList)
+     * @param  array<int, array{id: string, value: string}>  $fields  List of form fields retrieved from getCourierFields
+     *                                                                For checkbox with multiple selection, send separate arrays:
+     *                                                                [["id" => "services", "value" => "sms"], ["id" => "services", "value" => "email"]]
+     * @param  array<int, array<string, mixed>>  $packages  Array of packages. Weight of at least one package required.
+     *                                                      As a key use the field 'id' from packages_fields in getCourierFields response.
+     *                                                      Height, length, width in centimeters. Weight in kilograms.
+     *                                                      Example: [["weight" => "1", "height" => "25"]]
+     * @param  int|null  $accountId  Courier API account id from getCourierAccounts. If blank, the first account will be used.
      * @return array<string, mixed>
      *
      * Example:
@@ -48,12 +49,11 @@ class Shipment extends LaravelBaselinker
      * The method createPackageManual allows you to enter the shipping number and the name of the courier to the order.
      * Used only to add shipments created outside BaseLinker.
      *
-     * @param int $orderId Order ID
-     * @param string $courierCode Courier code (from getCouriersList or custom courier name)
-     * @param string $packageNumber Shipping number (consignment number)
-     * @param string $pickupDate Date of dispatch (unix time format)
-     * @param bool $returnShipment Marks package as return shipment
-     *
+     * @param  int  $orderId  Order ID
+     * @param  string  $courierCode  Courier code (from getCouriersList or custom courier name)
+     * @param  string  $packageNumber  Shipping number (consignment number)
+     * @param  string  $pickupDate  Date of dispatch (unix time format)
+     * @param  bool  $returnShipment  Marks package as return shipment
      * @return array<string, mixed>
      *
      * Example:
@@ -100,8 +100,7 @@ class Shipment extends LaravelBaselinker
     /**
      * The method allows you to retrieve the form fields for creating shipments for the selected courier.
      *
-     * @param string $courierCode Courier code (retrieved from getCouriersList)
-     *
+     * @param  string  $courierCode  Courier code (retrieved from getCouriersList)
      * @return array<string, mixed>
      *
      * Example:
@@ -124,12 +123,11 @@ class Shipment extends LaravelBaselinker
      * Used only for X-press, BrokerSystem, Wysyłam z Allegro, ErliPRO couriers.
      * Not applicable to other couriers whose forms have fixed options.
      *
-     * @param string $courierCode Courier code
-     * @param string $packageNumber Package number
-     * @param array<int, array{id: string, value: string}> $fields List of form fields from getCourierFields
-     * @param array<int, array<string, mixed>> $packages Array of packages with weight, dimensions etc.
-     * @param int|null $accountId Courier API account id from getCourierAccounts
-     *
+     * @param  string  $courierCode  Courier code
+     * @param  string  $packageNumber  Package number
+     * @param  array<int, array{id: string, value: string}>  $fields  List of form fields from getCourierFields
+     * @param  array<int, array<string, mixed>>  $packages  Array of packages with weight, dimensions etc.
+     * @param  int|null  $accountId  Courier API account id from getCourierAccounts
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getCourierServices
@@ -156,8 +154,7 @@ class Shipment extends LaravelBaselinker
     /**
      * The method allows you to retrieve the list of accounts connected to a given courier.
      *
-     * @param string $courierCode Courier code (retrieved from getCouriersList)
-     *
+     * @param  string  $courierCode  Courier code (retrieved from getCouriersList)
      * @return array<string, mixed>
      *
      * Example:
@@ -178,10 +175,9 @@ class Shipment extends LaravelBaselinker
     /**
      * The method allows you to download a shipping label (consignment) for a selected shipment.
      *
-     * @param string $courierCode Courier code
-     * @param int $packageId Shipment ID
-     * @param string|null $packageNumber Shipping number (consignment number)
-     *
+     * @param  string  $courierCode  Courier code
+     * @param  int  $packageId  Shipment ID
+     * @param  string|null  $packageNumber  Shipping number (consignment number)
      * @return array<string, mixed>
      *
      * Example:
@@ -207,11 +203,10 @@ class Shipment extends LaravelBaselinker
     /**
      * The method allows you to download a parcel protocol for selected shipments if the protocol is available for chosen courier.
      *
-     * @param string $courierCode Courier code
-     * @param array<int>|null $packageIds Array of shipment IDs (optional if packageNumbers provided)
-     * @param array<string>|null $packageNumbers Array of shipment numbers (optional if packageIds provided)
-     * @param int|null $accountId Courier API account id from getCourierAccounts
-     *
+     * @param  string  $courierCode  Courier code
+     * @param  array<int>|null  $packageIds  Array of shipment IDs (optional if packageNumbers provided)
+     * @param  array<string>|null  $packageNumbers  Array of shipment numbers (optional if packageIds provided)
+     * @param  int|null  $accountId  Courier API account id from getCourierAccounts
      * @return array<string, mixed>
      *
      * Example:
@@ -240,12 +235,11 @@ class Shipment extends LaravelBaselinker
     /**
      * The method allows you to download a courier document.
      *
-     * @param string $courierCode Courier code
-     * @param string $documentType Document type (e.g. "manifest")
-     * @param int|null $accountId Courier API account id from getCourierAccounts
-     * @param array<int>|null $packageIds Array of shipment IDs (optional if packageNumbers provided)
-     * @param array<string>|null $packageNumbers Array of shipment numbers (optional if packageIds provided)
-     *
+     * @param  string  $courierCode  Courier code
+     * @param  string  $documentType  Document type (e.g. "manifest")
+     * @param  int|null  $accountId  Courier API account id from getCourierAccounts
+     * @param  array<int>|null  $packageIds  Array of shipment IDs (optional if packageNumbers provided)
+     * @param  array<string>|null  $packageNumbers  Array of shipment numbers (optional if packageIds provided)
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getCourierDocument
@@ -272,8 +266,7 @@ class Shipment extends LaravelBaselinker
     /**
      * The method allows you to download shipments previously created for the selected order.
      *
-     * @param int $orderId Order ID
-     *
+     * @param  int  $orderId  Order ID
      * @return array<string, mixed>
      *
      * Example:
@@ -294,7 +287,7 @@ class Shipment extends LaravelBaselinker
     /**
      * The method allows you to retrieve package details.
      *
-     * @param int $packageId Shipment ID
+     * @param  int  $packageId  Shipment ID
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getPackageDetails
@@ -313,8 +306,7 @@ class Shipment extends LaravelBaselinker
      * The method allows you to retrieve the history of the status list of the given shipments.
      * Maximum 100 shipments at a time.
      *
-     * @param array<int> $packageIds Array of shipment IDs
-     *
+     * @param  array<int>  $packageIds  Array of shipment IDs
      * @return array<string, mixed>
      *
      * Example:
@@ -336,11 +328,10 @@ class Shipment extends LaravelBaselinker
      * The method allows you to delete a previously created shipment.
      * Removes the shipment from BaseLinker and from the courier system if the courier API allows it.
      *
-     * @param string $courierCode Courier code
-     * @param int $packageId Shipment ID (optional if packageNumber provided)
-     * @param string|null $packageNumber Shipping number (optional if packageId provided)
-     * @param bool $forceDelete Force removal from BaseLinker even if courier API deletion fails
-     *
+     * @param  string  $courierCode  Courier code
+     * @param  int  $packageId  Shipment ID (optional if packageNumber provided)
+     * @param  string|null  $packageNumber  Shipping number (optional if packageId provided)
+     * @param  bool  $forceDelete  Force removal from BaseLinker even if courier API deletion fails
      * @return array<string, mixed>
      *
      * Example:
@@ -368,13 +359,12 @@ class Shipment extends LaravelBaselinker
     /**
      * Alias for runRequestParcelPickup.
      *
-     * @param string $courierCode Courier code
-     * @param array<int>|null $packageIds Array of shipment IDs (optional if packageNumbers provided)
-     * @param array<string>|null $packageNumbers Array of shipment numbers (optional if packageIds provided)
-     * @param int|null $accountId Courier API account id from getCourierAccounts
-     * @param array<int, array{id: string, value: string}>|null $fields List of fields from getRequestParcelPickupFields
-     *                                                                   Example: [["id" => "pickup_date", "value" => "1642416311"]]
-     *
+     * @param  string  $courierCode  Courier code
+     * @param  array<int>|null  $packageIds  Array of shipment IDs (optional if packageNumbers provided)
+     * @param  array<string>|null  $packageNumbers  Array of shipment numbers (optional if packageIds provided)
+     * @param  int|null  $accountId  Courier API account id from getCourierAccounts
+     * @param  array<int, array{id: string, value: string}>|null  $fields  List of fields from getRequestParcelPickupFields
+     *                                                                     Example: [["id" => "pickup_date", "value" => "1642416311"]]
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=runRequestParcelPickup
@@ -399,13 +389,12 @@ class Shipment extends LaravelBaselinker
      * The method allows you to request a parcel pickup for previously created shipments.
      * Sends a parcel pickup request to courier API if the courier API allows it.
      *
-     * @param string $courierCode Courier code
-     * @param array<int>|null $packageIds Array of shipment IDs (optional if packageNumbers provided)
-     * @param array<string>|null $packageNumbers Array of shipment numbers (optional if packageIds provided)
-     * @param int|null $accountId Courier API account id from getCourierAccounts
-     * @param array<int, array{id: string, value: string}>|null $fields List of fields from getRequestParcelPickupFields
-     *                                                                   Example: [["id" => "pickup_date", "value" => "1642416311"]]
-     *
+     * @param  string  $courierCode  Courier code
+     * @param  array<int>|null  $packageIds  Array of shipment IDs (optional if packageNumbers provided)
+     * @param  array<string>|null  $packageNumbers  Array of shipment numbers (optional if packageIds provided)
+     * @param  int|null  $accountId  Courier API account id from getCourierAccounts
+     * @param  array<int, array{id: string, value: string}>|null  $fields  List of fields from getRequestParcelPickupFields
+     *                                                                     Example: [["id" => "pickup_date", "value" => "1642416311"]]
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=runRequestParcelPickup
@@ -432,8 +421,7 @@ class Shipment extends LaravelBaselinker
     /**
      * The method allows you to retrieve additional fields for a parcel pickup request.
      *
-     * @param string $courierCode Courier code
-     *
+     * @param  string  $courierCode  Courier code
      * @return array<string, mixed>
      *
      * Example:

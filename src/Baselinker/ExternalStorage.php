@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Baselinker;
 
@@ -24,8 +26,7 @@ class ExternalStorage extends LaravelBaselinker
     /**
      * The method allows you to retrieve a list of categories from the selected external storage (shop, wholesaler).
      *
-     * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
-     *
+     * @param  string  $storageId  Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
      * @return array<string, mixed>
      *
      * Example:
@@ -46,9 +47,8 @@ class ExternalStorage extends LaravelBaselinker
     /**
      * The method allows to retrieve detailed data of selected products from an external storage (shop/wholesaler) connected to BaseLinker.
      *
-     * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
-     * @param array<int> $products An array of product ID numbers to download.
-     *
+     * @param  string  $storageId  Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
+     * @param  array<int>  $products  An array of product ID numbers to download.
      * @return array<string, mixed>
      *
      * Example:
@@ -70,20 +70,19 @@ class ExternalStorage extends LaravelBaselinker
     /**
      * The method allows to retrieve a list of products from an external storage (shop/wholesaler) connected to BaseLinker.
      *
-     * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
-     * @param string|null $filterCategoryId Retrieving products from a specific category
-     * @param string|null $filterSort The value for sorting the product list. Possible values: "id [ASC|DESC]", "name [ASC|DESC]", "quantity [ASC|DESC]", "price [ASC|DESC]"
-     * @param string|null $filterId Limiting results to a specific product id
-     * @param string|null $filterEan Limiting results to a specific ean
-     * @param string|null $filterSku Limiting results to a specific sku
-     * @param string|null $filterName Limiting results to a specific name (partial match)
-     * @param float|null $filterPriceFrom Minimum price limit (not displaying products with lower price)
-     * @param float|null $filterPriceTo Maximum price limit (not displaying products with higher price)
-     * @param int|null $filterQuantityFrom Minimum quantity limit
-     * @param int|null $filterQuantityTo Maximum quantity limit
-     * @param int|null $filterAvailable Displaying only products marked as available (value 1) or not available (0) or all (empty value)
-     * @param int|null $page Results paging (100 products per page)
-     *
+     * @param  string  $storageId  Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
+     * @param  string|null  $filterCategoryId  Retrieving products from a specific category
+     * @param  string|null  $filterSort  The value for sorting the product list. Possible values: "id [ASC|DESC]", "name [ASC|DESC]", "quantity [ASC|DESC]", "price [ASC|DESC]"
+     * @param  string|null  $filterId  Limiting results to a specific product id
+     * @param  string|null  $filterEan  Limiting results to a specific ean
+     * @param  string|null  $filterSku  Limiting results to a specific sku
+     * @param  string|null  $filterName  Limiting results to a specific name (partial match)
+     * @param  float|null  $filterPriceFrom  Minimum price limit (not displaying products with lower price)
+     * @param  float|null  $filterPriceTo  Maximum price limit (not displaying products with higher price)
+     * @param  int|null  $filterQuantityFrom  Minimum quantity limit
+     * @param  int|null  $filterQuantityTo  Maximum quantity limit
+     * @param  int|null  $filterAvailable  Displaying only products marked as available (value 1) or not available (0) or all (empty value)
+     * @param  int|null  $page  Results paging (100 products per page)
      * @return array<string, mixed>
      *
      * Example:
@@ -130,9 +129,8 @@ class ExternalStorage extends LaravelBaselinker
     /**
      * The method allows to retrieve stock from an external storage (shop/wholesaler) connected to BaseLinker.
      *
-     * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
-     * @param int|null $page Results paging (1000 products per page)
-     *
+     * @param  string  $storageId  Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
+     * @param  int|null  $page  Results paging (1000 products per page)
      * @return array<string, mixed>
      *
      * Example:
@@ -154,9 +152,8 @@ class ExternalStorage extends LaravelBaselinker
     /**
      * The method allows to retrieve product prices from an external storage (shop/wholesaler) connected to BaseLinker.
      *
-     * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
-     * @param int|null $page Results paging (1000 products per page)
-     *
+     * @param  string  $storageId  Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
+     * @param  int|null  $page  Results paging (1000 products per page)
      * @return array<string, mixed>
      *
      * Example:
@@ -179,13 +176,12 @@ class ExternalStorage extends LaravelBaselinker
      * The method allows to bulk update the product stock (and/or variants) in an external storage (shop/wholesaler) connected to BaseLinker.
      * Maximum 1000 products at a time.
      *
-     * @param string $storageId Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
-     * @param array<int, array{0: string|int, 1: int, 2: int}> $products An array of products. Each product is a separate element of the array.
-     *                                                                    The product consists of a 3 element array:
-     *                                                                    [0] => product ID number (varchar)
-     *                                                                    [1] => variant ID number (0 if the main product is changed, not the variant) (int)
-     *                                                                    [2] => Stock quantity (int)
-     *
+     * @param  string  $storageId  Storage ID in format "[type:shop|warehouse]_[id:int]" (e.g. "shop_2445").
+     * @param  array<int, array{0: string|int, 1: int, 2: int}>  $products  An array of products. Each product is a separate element of the array.
+     *                                                                      The product consists of a 3 element array:
+     *                                                                      [0] => product ID number (varchar)
+     *                                                                      [1] => variant ID number (0 if the main product is changed, not the variant) (int)
+     *                                                                      [2] => Stock quantity (int)
      * @return array<string, mixed>
      *
      * Example:
