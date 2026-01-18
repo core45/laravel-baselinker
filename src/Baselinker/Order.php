@@ -297,13 +297,18 @@ class Order extends LaravelBaselinker
      * Alias for getOrderTransactionData.
      *
      * @param int $orderId
+     * @param bool|null $includeComplexTaxes Include detailed tax breakdown
+     * @param bool|null $includeAmazonData Include legacy Amazon fulfillment data
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getOrderTransactionData
      */
-    public function getOrderTransactionDetails(int $orderId): array
-    {
-        return $this->getOrderTransactionData($orderId);
+    public function getOrderTransactionDetails(
+        int $orderId,
+        ?bool $includeComplexTaxes = null,
+        ?bool $includeAmazonData = null
+    ): array {
+        return $this->getOrderTransactionData($orderId, $includeComplexTaxes, $includeAmazonData);
     }
 
     /**
@@ -699,10 +704,6 @@ class Order extends LaravelBaselinker
      * @param string|null $extraField1
      * @param string|null $extraField2
      * @param array<int, mixed>|null $customExtraFields
-     * @param string|null $extraField1
-     * @param string|null $extraField2
-     * @param string|null $extraField1
-     * @param string|null $extraField2
      * @param string|null $pickState
      * @param string|null $packState
      * @return array<string, mixed>
