@@ -23,10 +23,10 @@
     },
     "authors": [
         {
-            "name": "Kornel",
-            "email": "kornel@core45.com"
+            "name": "Core45",
+            "email": "contact@core45.com"
         }
     ],
     "minimum-stability": "dev",
-    "version": "1.0.2"
+    "version": "2.0.0"
 }

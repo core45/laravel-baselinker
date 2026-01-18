@@ -8,19 +8,13 @@ class Order extends LaravelBaselinker
      * The method allows you to download a list of order events from the last 3 days.
      *
      * @param int $lastLogId Log ID number from which the logs are to be retrieved
-     * @param array $logsTypes Event ID List
+     * @param array<int, int> $logsTypes Event ID list
      * @param int|null $orderId Order ID number
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->getJournalList(654258, [7, 13])
+     * @see https://api.baselinker.com/?method=getJournalList
      */
-    public function getJournalList(
-        int $lastLogId,
-        array $logsTypes,
-        ?int $orderId = null,
-    )
+    public function getJournalList(int $lastLogId, array $logsTypes, ?int $orderId = null): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -36,15 +30,13 @@ class Order extends LaravelBaselinker
 
     /**
      * The method allows adding a new order to the BaseLinker order manager.
-     * todo: test and check which parameters are required
      *
-     * @param int $orderStatusId Order status (the list available to retrieve with getOrderStatusList)
-     * @param int|null $customSourceId (optional) Identifier of custom order source defined in BaseLinker panel. If not provided, default order source is assigned.
-     * @param int $dateAdd Date of order creation (in unix time format)
+     * @param int $orderStatusId Order status ID
+     * @param int $dateAdd Date of order creation (unix timestamp)
      * @param string $currency 3-letter currency symbol (e.g. EUR, PLN)
      * @param string $paymentMethod
-     * @param integer $paymentMethodCod Flag indicating whether the type of payment is COD (cash on delivery)
-     * @param integer $paid Information whether the order is already paid. The value "1" automatically adds a full payment to the order.
+     * @param int $paymentMethodCod Is payment COD (1=yes, 0=no)
+     * @param int $paid Is order paid (1=yes, 0=no)
      * @param string $userComments
      * @param string $adminComments
      * @param string $email
@@ -58,7 +50,7 @@ class Order extends LaravelBaselinker
      * @param string $deliveryPostcode
      * @param string $deliveryCity
      * @param string $deliveryState
-     * @param string $deliveryCountryCode Delivery address - country code (two-letter, e.g. EN)
+     * @param string $deliveryCountryCode Two-letter country code
      * @param string $deliveryPointId
      * @param string $deliveryPointName
      * @param string $deliveryPointAddress
@@ -71,41 +63,19 @@ class Order extends LaravelBaselinker
      * @param string $invoicePostcode
      * @param string $invoiceCity
      * @param string $invoiceState
-     * @param string $invoiceCountryCode Billing details - country code (two-letter, e.g. EN)
-     * @param int $wantInvoice Flag indicating whether the customer wants an invoice (1 - yes, 0 - no)
+     * @param string $invoiceCountryCode Two-letter country code
+     * @param int $wantInvoice Customer wants invoice (1=yes, 0=no)
      * @param string $extraField1
      * @param string $extraField2
-     * @param array $customExtraFields A list containing order custom extra fields, where the key is the extra field ID and value is an extra field content for given extra field. The list of extra fields can be retrieved with getOrderExtraFields method.
-     * In case of removing a field the empty string is expected.
-     * In case of file the following format is expected:
-     * {
-     * "title": "file.pdf" (varchar(40) - the file name)
-     * "file": "data:4AAQSkZJRgABA[...]" (binary - the file body limited to 2MB)
-     * }
-     *
-     * @param array $products Order product array. Each element of the array is also an array containing fields:
-     * storage (varchar) - type of magazine from which the product comes (available values: "db" - BaseLinker internal catalog, "shop" - the online store magazine, "warehouse" - a connected wholesaler).
-     * storage_id (int) - the identifier of the magazine from which the product comes (one of the shops connected to the account). Value "0" for a product from the BaseLinker internal catalog.
-     * product_id (varchar) - Product identifier in BaseLinker or store magazine. Blank if the product number is unknown
-     * variant_id (int) - Product variant ID. Blank if the variant number is unknown
-     * name (varchar) - Product name
-     * sku (varchar) - Product sku
-     * ean (varchar) - Product ean
-     * location (varchar) - Product location
-     * warehouse_id (int) - Product source warehouse identifier. Only applies to products from BaseLinker inventory. By default warehouse_id is determined based on the source of the order.
-     * attributes (varchar) - Specific product attributes (e.g. "Color: blue")
-     * price_brutto (float) - Single item gross price
-     * tax_rate (float) - VAT tax rate e.g. "23", (value from range 0-100, EXCEPTION values: "-1" for "EXPT"/"ZW" exempt from VAT, "-0.02" for "NP" annotation, "-0.03" for "OO" VAT reverse charge)
-     * quantity (int) - Quantity of pieces
-     * weight (float) - Single item weight
-     *
-     * @return array
+     * @param array<int, mixed> $customExtraFields Custom extra fields
+     * @param array<int, array<string, mixed>> $products Order products
+     * @param int|null $customSourceId Custom order source ID
+     * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addOrder
      */
     public function addOrder(
         int $orderStatusId,
-        ?int $customSourceId = null,
         int $dateAdd,
         string $currency,
         string $paymentMethod,
@@ -143,8 +113,8 @@ class Order extends LaravelBaselinker
         string $extraField2,
         array $customExtraFields,
         array $products,
-    )
-    {
+        ?int $customSourceId = null
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
@@ -194,18 +164,35 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method returns types of order sources along with their IDs.
-     * Order sources are grouped by their type that corresponds to a field order_source from the getOrders method.
-     * Available source types are "personal", "shop" or "marketplace_code" e.g. "ebay", "amazon", "ceneo", "emag", "allegro", etc.
+     * The method allows to duplicate an existing order.
      *
-     * @return array
+     * @param int $orderId Order ID to duplicate
+     * @param int|null $orderStatusId New order status ID
+     * @return array<string, mixed>
      *
-     * Example:
-     * ->getOrderSources()
-     *
-     * @see https://api.baselinker.com/index.php?method=getOrderSources
+     * @see https://api.baselinker.com/?method=addOrderDuplicate
      */
-    public function getOrderSources()
+    public function addOrderDuplicate(int $orderId, ?int $orderStatusId = null): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_id' => $orderId,
+                'order_status_id' => $orderStatusId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method returns types of order sources along with their IDs.
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderSources
+     */
+    public function getOrderSources(): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -215,17 +202,13 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method returns extra fields defined for the orders. Values of those fields can be set with method setOrderFields.
-     * In order to retrieve values of those fields set parameter include_custom_extra_fields in method getOrders
+     * The method returns extra fields defined for the orders.
      *
-     * @return array
+     * @return array<string, mixed>
      *
-     * Example:
-     * ->getOrderExtraFields()
-     *
-     * @see https://api.baselinker.com/index.php?method=getOrderExtraFields
+     * @see https://api.baselinker.com/?method=getOrderExtraFields
      */
-    public function getOrderExtraFields()
+    public function getOrderExtraFields(): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -236,46 +219,34 @@ class Order extends LaravelBaselinker
 
     /**
      * The getOrders method allows you to download orders from a specific date from the BaseLinker order manager.
-     * The order list can be limited using the filters described in the method parameters.
      * A maximum of 100 orders are returned at a time.
      *
-     * It is recommended to download only confirmed orders (get_unconfirmed_orders = false). Unconfirmed orders may be incomplete. The user may be, for example, in the process of creating an order - it already exists in the database, but not all information is completed. Unconfirmed orders may contain only a partial list of products and may be changed soon. Confirmed orders usually do not change anymore and can be safely downloaded to an external system.
+     * @param int|null $orderId Order identifier
+     * @param int|null $dateConfirmedFrom Date of order confirmation (unix timestamp)
+     * @param int|null $dateFrom Order date from (unix timestamp)
+     * @param int|null $idFrom Order ID to start from
+     * @param bool $getUnconfirmedOrders Include unconfirmed orders
+     * @param bool $includeCustomExtraFields Include custom extra fields
+     * @param int|null $statusId Filter by status ID
+     * @param string|null $filterEmail Filter by email
+     * @param string|null $filterOrderSource Filter by order source
+     * @param string|null $filterOrderSourceId Filter by order source ID
+     * @return array<string, mixed>
      *
-     * The best way to download the ongoing orders is:
-     * Collecting new order identifiers using getJournalList.
-     *
-     * Or, using this method:
-     * 1. Setting the starting date and specifying it in the date_confirmed_from field
-     * 2. Processing of all received orders. If 100 orders are received, there may be even more to download.
-     * 3. Downloading the next package of orders by entering the value of the date_confirmed field from last downloaded order in the date_confirmed_from field. In order to avoid downloading the same orders value of date_confirmed should be increased by 1 second. This operation is repeated until you receive a package with less than 100 orders (this means that there are no more orders left to download).
-     * 4. Saving the date_confirmed last processed order. You can download orders from this date onwards so that you do not download the same order twice. It is not possible for an order to 'jump' into the database with an earlier confirmation date. This way you can be sure that all confirmed orders have been downloaded.
-     *
-     * @param int|null $orderId (optional) Order identifier. Completing this field will download information about only one specific order.
-     * @param int|null $dateConfirmedFrom (optional) Date of order confirmation from which orders are to be collected. Format unix time stamp.
-     * @param int|null $dateFrom (optional) The order date from which orders are to be collected. Format unix time stamp.
-     * @param int|null $idFrom (optional) The order ID number from which subsequent orders are to be collected.
-     * @param bool|null $getUnconfirmedOrders (optional, false by default) Download unconfirmed orders as well (this is e.g. an order from Allegro to which the customer has not yet completed the delivery form). Default is false. Unconfirmed orders may not be complete yet, the shipping method and price is also unknown.
-     * @param bool|null $includeCustomExtraFields (optional, false by default) Download values of custom additional fields.
-     * @param int|null $statusId (optional) The status identifier from which orders are to be collected. Leave blank to download orders from all statuses.
-     * @param string|null $filterEmail (optional) Filtering of order lists by e-mail address (displays only orders with the given e-mail address).
-     * @param string|null $filterOrderSource (optional) Filtering of order lists by order source, for instance "ebay", "amazon" (displays only orders come from given source). The list of order sources can be retrieved with getOrderSources method.
-     * @param string|null $filterOrderSourceId (optional) Filtering of order lists by order source identifier, for instance "2523" (displays only orders come from order source defined in "filter_order_source" identified by given order source identifier). Filtering by order source indentifier requires "filter_order_source" to be set prior. The list of order source identifiers can be retrieved with getOrderSources method.
-     *
-     * @return array
+     * @see https://api.baselinker.com/?method=getOrders
      */
     public function getOrders(
         ?int $orderId = null,
         ?int $dateConfirmedFrom = null,
         ?int $dateFrom = null,
         ?int $idFrom = null,
-        ?bool $getUnconfirmedOrders = false,
-        ?bool $includeCustomExtraFields = false,
+        bool $getUnconfirmedOrders = false,
+        bool $includeCustomExtraFields = false,
         ?int $statusId = null,
         ?string $filterEmail = null,
         ?string $filterOrderSource = null,
-        ?string $filterOrderSourceId = null,
-    )
-    {
+        ?string $filterOrderSourceId = null
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
@@ -296,15 +267,14 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to retrieve transaction details for a selected order (it now works only for orders from Amazon)
+     * The method allows you to retrieve transaction details for a selected order.
      *
      * @param int $orderId
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * @see https://api.baselinker.com/index.php?method=getOrderTransactionDetails
+     * @see https://api.baselinker.com/?method=getOrderTransactionDetails
      */
-    public function getOrderTransactionDetails(int $orderId)
+    public function getOrderTransactionDetails(int $orderId): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -319,13 +289,12 @@ class Order extends LaravelBaselinker
     /**
      * The method allows to search for orders related to the given e-mail address.
      *
-     * @param string $email varchar(50)	The e-mail address we search for in orders.
+     * @param string $email
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * @see https://api.baselinker.com/index.php?method=getOrdersByEmail
+     * @see https://api.baselinker.com/?method=getOrdersByEmail
      */
-    public function getOrdersByEmail(string $email)
+    public function getOrdersByEmail(string $email): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -340,13 +309,12 @@ class Order extends LaravelBaselinker
     /**
      * The method allows to search for orders related to the given phone number.
      *
-     * @param string $phone varchar(50)	The phone number we search for in orders.
+     * @param string $phone
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * @see https://api.baselinker.com/index.php?method=getOrdersByPhone
+     * @see https://api.baselinker.com/?method=getOrdersByPhone
      */
-    public function getOrdersByPhone(string $phone)
+    public function getOrdersByPhone(string $phone): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -359,29 +327,36 @@ class Order extends LaravelBaselinker
     }
 
     /**
+     * The method allows to delete orders.
+     *
+     * @param array<int, int> $orderIds Array of order IDs to delete
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=deleteOrders
+     */
+    public function deleteOrders(array $orderIds): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_ids' => $orderIds,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
      * The addInvoice method allows to issue an order invoice.
      *
-     * @param string $orderId Order Identifier from BaseLinker order manager
-     * @param string $seriesId Series numbering identifier
-     * @param string|null $vatRate (optional) VAT rate - parameter accepts values:
-     * - "DEFAULT": according to the numbering series (is set as default value)
-     * - "ITEM": use the rate assigned to the item of the order
-     * - "EXPT" / "ZW": exempt from VAT
-     * - "NP": annotation NP
-     * - "OO": VAT reverse charge
-     * - value: number from range 0-100
+     * @param int $orderId Order ID
+     * @param int $seriesId Series numbering ID
+     * @param string|null $vatRate VAT rate (DEFAULT, ITEM, EXPT/ZW, NP, OO, or 0-100)
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->addInvoice('3754894', '15')
-     *
+     * @see https://api.baselinker.com/?method=addInvoice
      */
-    public function addInvoice(
-        string $orderId,
-        string $seriesId,
-        ?string $vatRate = null,
-    )
+    public function addInvoice(int $orderId, int $seriesId, ?string $vatRate = null): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -396,23 +371,48 @@ class Order extends LaravelBaselinker
     }
 
     /**
+     * The method allows to issue an invoice correction.
+     *
+     * @param int $invoiceId Invoice ID to correct
+     * @param int $seriesId Correction series ID
+     * @param string $reason Reason for correction
+     * @param array<int, array<string, mixed>>|null $correctionItems Items to correct
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=addInvoiceCorrection
+     */
+    public function addInvoiceCorrection(
+        int $invoiceId,
+        int $seriesId,
+        string $reason,
+        ?array $correctionItems = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'invoice_id' => $invoiceId,
+                'series_id' => $seriesId,
+                'reason' => $reason,
+                'correction_items' => $correctionItems,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
      * The method getInvoices allows you to download invoices issued from the BaseLinker order manager.
-     * The list of invoices can be limited using filters described in the method parameters.
      * Maximum 100 invoices are returned at a time.
      *
-     * @param int|null $invoiceId (optional) Invoice identifier. Completing this field will result in downloading information about only one specific invoice.
-     * @param int|null $orderId (optional) Order identifier. Completing this field will result in downloading information only about the invoice associated with this order (if the order has an invoice created).
-     * @param int|null $dateFrom (optional) Date from which invoices are to be collected. Unix time stamp format.
-     * @param int|null $idFrom (optional) The invoice ID number from which subsequent invoices are to be retrieved.
-     * @param int|null $seriesId (optional) numbering series ID that allows filtering after the invoice numbering series.
-     * @param bool|null $getExternalInvoices If set to 'false' then omits from the results invoices that already have an external invoice file uploaded by addOrderInvoiceFile method (useful for ERP integrations uploading invoice files to BaseLinker)
+     * @param int|null $invoiceId Invoice identifier
+     * @param int|null $orderId Order identifier
+     * @param int|null $dateFrom Date from (unix timestamp)
+     * @param int|null $idFrom Invoice ID to start from
+     * @param int|null $seriesId Filter by series ID
+     * @param bool $getExternalInvoices Include external invoices
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->getInvoices(null, null, 1407341754)
-     *
-     * @see https://api.baselinker.com/index.php?method=getInvoices
+     * @see https://api.baselinker.com/?method=getInvoices
      */
     public function getInvoices(
         ?int $invoiceId = null,
@@ -420,9 +420,8 @@ class Order extends LaravelBaselinker
         ?int $dateFrom = null,
         ?int $idFrom = null,
         ?int $seriesId = null,
-        ?bool $getExternalInvoices = true,
-    )
-    {
+        bool $getExternalInvoices = true
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
@@ -441,11 +440,11 @@ class Order extends LaravelBaselinker
     /**
      * The method allows to download a series of invoice/receipt numbering.
      *
-     * @return array
+     * @return array<string, mixed>
      *
-     * @see https://api.baselinker.com/index.php?method=getSeries
+     * @see https://api.baselinker.com/?method=getSeries
      */
-    public function getSeries()
+    public function getSeries(): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -455,13 +454,13 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to download order statuses created by the customer in the BaseLinker order manager.
+     * The method allows you to download order statuses created by the customer.
      *
-     * @return array
+     * @return array<string, mixed>
      *
-     * @see https://api.baselinker.com/index.php?method=getOrderStatusList
+     * @see https://api.baselinker.com/?method=getOrderStatusList
      */
-    public function getOrderStatusList()
+    public function getOrderStatusList(): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -471,22 +470,15 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to retrieve payment history for a selected order, including an external payment identifier from the payment gateway.
-     * One order can have multiple payment history entries, caused by surcharges, order value changes, manual payment editing
+     * The method allows you to retrieve payment history for a selected order.
      *
      * @param int $orderId
      * @param bool $showFullHistory
-     * @return array
+     * @return array<string, mixed>
      *
-     * Example:
-     * ->getOrderPaymentsHistory(3754894)
-     *
-     * @see https://api.baselinker.com/index.php?method=getOrderPaymentsHistory
+     * @see https://api.baselinker.com/?method=getOrderPaymentsHistory
      */
-    public function getOrderPaymentsHistory(
-        int $orderId,
-        bool $showFullHistory = false,
-    )
+    public function getOrderPaymentsHistory(int $orderId, bool $showFullHistory = false): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -500,25 +492,35 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The getNewReceipts method allows you to retrieve receipts waiting to be issued.
-     * This method should be used in creating integration with a fiscal printer.
-     * The method can be requested for new receipts every e.g. 10 seconds.
-     * If any receipts appear in response, they should be confirmed by the setOrderReceipt method after printing to disappear from the waiting list.
+     * The method allows you to retrieve pick/pack history for a selected order.
      *
-     * @param int|null $seriesId (optional) The numbering series ID allows filtering by the receipt numbering series. Using multiple series numbering for receipts is recommended when the user has multiple fiscal printers. Each fiscal printer should have a separate series.
-     * @param int|null $idFrom (optional) ID from which logs are to be retrieved. [default=0]
+     * @param int $orderId
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->getNewReceipts(0, 1)
-     *
-     * @see https://api.baselinker.com/index.php?method=getNewReceipts
+     * @see https://api.baselinker.com/?method=getOrderPickPackHistory
      */
-    public function getNewReceipts(
-        ?int $seriesId = null,
-        int $idFrom = 0,
-    )
+    public function getOrderPickPackHistory(int $orderId): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_id' => $orderId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The getNewReceipts method allows you to retrieve receipts waiting to be issued.
+     *
+     * @param int|null $seriesId Filter by series ID
+     * @param int $idFrom ID to start from
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getNewReceipts
+     */
+    public function getNewReceipts(?int $seriesId = null, int $idFrom = 0): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -532,23 +534,45 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to retrieve a single receipt from the BaseLinker order manager.
-     * To retrieve a list of new receipts (when integrating a fiscal printer), use the getNewReceipts method.
+     * The method allows you to retrieve a list of receipts.
      *
-     * @param int $receiptId
-     * @param int $orderId
+     * @param int|null $receiptId Receipt ID
+     * @param int|null $orderId Order ID
+     * @param int|null $dateFrom Date from (unix timestamp)
+     * @param int|null $idFrom Receipt ID to start from
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->getReceipt(143476260)
-     *
-     * @see https://api.baselinker.com/index.php?method=getReceipt
+     * @see https://api.baselinker.com/?method=getReceipts
      */
-    public function getReceipt(
-        int $orderId,
+    public function getReceipts(
         ?int $receiptId = null,
-    )
+        ?int $orderId = null,
+        ?int $dateFrom = null,
+        ?int $idFrom = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'receipt_id' => $receiptId,
+                'order_id' => $orderId,
+                'date_from' => $dateFrom,
+                'id_from' => $idFrom,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to retrieve a single receipt from the BaseLinker order manager.
+     *
+     * @param int $orderId
+     * @param int|null $receiptId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getReceipt
+     */
+    public function getReceipt(int $orderId, ?int $receiptId = null): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -562,14 +586,13 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to edit selected fields (e.g. address data, notes, etc.) of a specific order.
-     * Only the fields that you want to edit should be given, other fields can be omitted in the request.
+     * The method allows you to edit selected fields of a specific order.
      *
-     * @param int $orderId Order identifier from the BaseLinker order manager. Field required. Other fields are optional.
+     * @param int $orderId Order identifier
      * @param string|null $adminComments
      * @param string|null $userComments
      * @param string|null $paymentMethod
-     * @param int|null $paymentMethodCod bool	Flag indicating whether the type of payment is COD (cash on delivery)
+     * @param int|null $paymentMethodCod
      * @param string|null $email
      * @param string|null $phone
      * @param string|null $userLogin
@@ -581,7 +604,7 @@ class Order extends LaravelBaselinker
      * @param string|null $deliveryPostcode
      * @param string|null $deliveryCity
      * @param string|null $deliveryState
-     * @param string|null $deliveryCountryCode char(2)	Delivery address - country code (two-letter, e.g. EN)
+     * @param string|null $deliveryCountryCode
      * @param string|null $deliveryPointId
      * @param string|null $deliveryPointName
      * @param string|null $deliveryPointAddress
@@ -594,28 +617,16 @@ class Order extends LaravelBaselinker
      * @param string|null $invoicePostcode
      * @param string|null $invoiceCity
      * @param string|null $invoiceState
-     * @param string|null $invoiceCountryCode char(2)	Billing details - country code (two-letter, e.g. EN)
-     * @param int|null $wantInvoice Flag indicating whether the customer wants an invoice (1 - yes, 0 - no)
+     * @param string|null $invoiceCountryCode
+     * @param int|null $wantInvoice
      * @param string|null $extraField1
      * @param string|null $extraField2
+     * @param array<int, mixed>|null $customExtraFields
+     * @param string|null $pickState
+     * @param string|null $packState
+     * @return array<string, mixed>
      *
-     * @param array|null $customExtraFields A list containing order custom extra fields, where the key is the extra field ID and value is an extra field content for given extra field. The list of extra fields can be retrieved with getOrderExtraFields method.
-     * In case of removing a field the empty string is expected.
-     * In case of file the following format is expected:
-     * {
-     * "title": "file.pdf" (varchar(40) - the file name)
-     * "file": "data:4AAQSkZJRgABA[...]" (binary - the file body limited to 2MB)
-     * }
-     *
-     * @param string|null $pickState Flag indicating the status of the order products collection (1 - all products have been collected, 0 - not all products have been collected)
-     * @param string|null $packState Flag indicating the status of the order products packing (1 - all products have been packed, 0 - not all products have been packed)
-     *
-     * @return array
-     *
-     * Example:
-     * ->setOrderFields(3754894)
-     *
-     * @see https://api.baselinker.com/index.php?method=setOrderFields
+     * @see https://api.baselinker.com/?method=setOrderFields
      */
     public function setOrderFields(
         int $orderId,
@@ -653,9 +664,8 @@ class Order extends LaravelBaselinker
         ?string $extraField2 = null,
         ?array $customExtraFields = null,
         ?string $pickState = null,
-        ?string $packState = null,
-    )
-    {
+        ?string $packState = null
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
@@ -704,48 +714,44 @@ class Order extends LaravelBaselinker
     /**
      * The addOrderProduct method allows you to add a new product to your order.
      *
-     * todo: test and check which parameters are required
+     * @param int $orderId Order ID
+     * @param string $storage Storage type (db, shop, warehouse)
+     * @param string $storageId Storage identifier
+     * @param string $name Product name
+     * @param int $warehouseId Warehouse ID
+     * @param float $priceBrutto Gross price
+     * @param float $taxRate VAT rate
+     * @param int $quantity Quantity
+     * @param string|null $productId Product ID
+     * @param string|null $variantId Variant ID
+     * @param string|null $auctionId Auction ID
+     * @param string|null $sku SKU
+     * @param string|null $ean EAN
+     * @param string|null $location Location
+     * @param string|null $attributes Attributes (e.g. "Color: blue")
+     * @param float|null $weight Weight
+     * @return array<string, mixed>
      *
-     * @param int $orderId Order Identifier from BaseLinker order manager
-     * @param string $storage varchar(9)	Type of product source storage (available values: "db" - BaseLinker internal catalog, "shop" - online shop storage, "warehouse" - the connected wholesaler)
-     * @param string $storageId The identifier of the storage (inventory/shop/warehouse) from which the product comes.
-     * @param string|null $productId Product identifier in BaseLinker or shop storage. Blank if the product number is not known
-     * @param string|null $variantId Product variant ID. Blank if the variant number is unknown
-     * @param string|null $auctionId Listing ID number (if the order comes from ebay/allegro)
-     * @param string $name
-     * @param string $sku
-     * @param string $ean
-     * @param string $location
-     * @param int $warehouseId Product source warehouse identifier. Only applies to products from BaseLinker inventory. By default warehouse_id is determined based on the warehouse identifiers in the existing products of the order. If no such product exist, it will be determined based on the source of the order
-     * @param string $attributes varchar(150) The detailed product attributes, e.g. "Colour: blue" (Variant name)
-     * @param float $priceBrutto Single item gross price
-     * @param float $taxRate VAT tax rate e.g. "23", (value from range 0-100, EXCEPTION values: "-1" for "EXPT"/"ZW" exempt from VAT, "-0.02" for "NP" annotation, "-0.03" for "OO" VAT reverse charge)
-     * @param int $quantity
-     * @param float|null $weight
-     *
-     * @return array
-     *
-     * @see https://api.baselinker.com/index.php?method=addOrderProduct
+     * @see https://api.baselinker.com/?method=addOrderProduct
      */
     public function addOrderProduct(
         int $orderId,
         string $storage,
         string $storageId,
-        ?string $productId = null,
-        ?string $variantId = null,
-        ?string $auctionId = null,
         string $name,
-        ?string $sku = null,
-        ?string $ean = null,
-        ?string $location = null,
         int $warehouseId,
-        ?string $attributes = null,
         float $priceBrutto,
         float $taxRate,
         int $quantity,
-        ?float $weight = null,
-    )
-    {
+        ?string $productId = null,
+        ?string $variantId = null,
+        ?string $auctionId = null,
+        ?string $sku = null,
+        ?string $ean = null,
+        ?string $location = null,
+        ?string $attributes = null,
+        ?float $weight = null
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
@@ -772,52 +778,48 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method setOrderProductFields allows you to edit the data of selected items (e.g. prices, quantities etc.) of a specific order.
-     * Only the fields that you want to edit should be given, the remaining fields can be omitted in the request.
+     * The method setOrderProductFields allows you to edit the data of selected items.
      *
-     * todo: test and check which parameters are required
+     * @param int $orderId Order ID
+     * @param int $orderProductId Order product ID
+     * @param string $storage Storage type
+     * @param string $storageId Storage ID
+     * @param string $name Product name
+     * @param int $warehouseId Warehouse ID
+     * @param float $priceBrutto Gross price
+     * @param float $taxRate Tax rate
+     * @param int $quantity Quantity
+     * @param string|null $productId Product ID
+     * @param string|null $variantId Variant ID
+     * @param string|null $auctionId Auction ID
+     * @param string|null $sku SKU
+     * @param string|null $ean EAN
+     * @param string|null $location Location
+     * @param string|null $attributes Attributes
+     * @param float|null $weight Weight
+     * @return array<string, mixed>
      *
-     * @param int $orderId
-     * @param int $orderProductId
-     * @param string $storage varchar(9)    Type of product source storage (available values: "db" - BaseLinker internal catalog, "shop" - online shop storage, "warehouse" - the connected wholesaler)
-     * @param string $storageId The identifier of the storage (inventory/shop/warehouse) from which the product comes.
-     * @param string|null $productId Product identifier in BaseLinker or shop storage. Blank if the product number is not known
-     * @param string|null $variantId Product variant ID. Blank if the variant number is unknown
-     * @param string|null $auctionId Listing ID number (if the order comes from ebay/allegro)
-     * @param string $name
-     * @param string|null $sku
-     * @param string|null $ean
-     * @param string|null $location
-     * @param int $warehouseId Product source warehouse identifier. Only applies to products from BaseLinker inventory. By default warehouse_id is determined based on the warehouse identifiers in the existing products of the order. If no such product exist, it will be determined based on the source of the order
-     * @param string $attributes varchar(150) The detailed product attributes, e.g. "Colour: blue" (Variant name)
-     * @param float $priceBrutto Single item gross price
-     * @param float $taxRate VAT tax rate e.g. "23", (value from range 0-100, EXCEPTION values: "-1" for "EXPT"/"ZW" exempt from VAT, "-0.02" for "NP" annotation, "-0.03" for "OO" VAT reverse charge)* @param int $quantity
-     * @param float|null $weight
-     *
-     * @return array
-     *
-     * @see https://api.baselinker.com/index.php?method=setOrderProductFields
+     * @see https://api.baselinker.com/?method=setOrderProductFields
      */
     public function setOrderProductFields(
         int $orderId,
         int $orderProductId,
         string $storage,
         string $storageId,
-        ?string $productId = null,
-        ?string $variantId = null,
-        ?string $auctionId = null,
         string $name,
-        ?string $sku = null,
-        ?string $ean = null,
-        ?string $location = null,
         int $warehouseId,
-        ?string $attributes = null,
         float $priceBrutto,
         float $taxRate,
         int $quantity,
-        ?float $weight = null,
-    )
-    {
+        ?string $productId = null,
+        ?string $variantId = null,
+        ?string $auctionId = null,
+        ?string $sku = null,
+        ?string $ean = null,
+        ?string $location = null,
+        ?string $attributes = null,
+        ?float $weight = null
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
@@ -849,18 +851,11 @@ class Order extends LaravelBaselinker
      *
      * @param int $orderId
      * @param int $orderProductId
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->deleteOrderProduct(3754894, 59157160)
-     *
-     * @see https://api.baselinker.com/index.php?method=deleteOrderProduct
+     * @see https://api.baselinker.com/?method=deleteOrderProduct
      */
-    public function deleteOrderProduct(
-        int $orderId,
-        int $orderProductId,
-    )
+    public function deleteOrderProduct(int $orderId, int $orderProductId): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -877,24 +872,21 @@ class Order extends LaravelBaselinker
      * The method setOrderPayment allows you to add a payment to the order.
      *
      * @param int $orderId
-     * @param float $paymentDone The amount of the payment. The value changes the current payment in the order (not added to the previous value). If the amount matches the order value, the order will be marked as paid.
-     * @param int $paymentDate Payment date unixtime.
-     * @param string $paymentComment varchar(30)
-     * @param string|null $externalPaymentId varchar(30) (optional) External payment identifier
+     * @param float $paymentDone Payment amount
+     * @param int $paymentDate Payment date (unix timestamp)
+     * @param string $paymentComment
+     * @param string|null $externalPaymentId External payment ID
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->setOrderPayment(3754894, 120.57, 1444736731, 'bank transfer mBank 12.10.2015')
+     * @see https://api.baselinker.com/?method=setOrderPayment
      */
     public function setOrderPayment(
         int $orderId,
         float $paymentDone,
         int $paymentDate,
         string $paymentComment,
-        ?string $externalPaymentId = null,
-    )
-    {
+        ?string $externalPaymentId = null
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
@@ -914,18 +906,11 @@ class Order extends LaravelBaselinker
      *
      * @param int $orderId
      * @param int $statusId
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->setOrderStatus(3754894, 34562)
-     *
-     * @see https://api.baselinker.com/index.php?method=setOrderStatus
+     * @see https://api.baselinker.com/?method=setOrderStatus
      */
-    public function setOrderStatus(
-        int $orderId,
-        int $statusId,
-    )
+    public function setOrderStatus(int $orderId, int $statusId): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -939,22 +924,15 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to batch set orders statuses
+     * The method allows you to batch set orders statuses.
      *
-     * @param array $orderIds
-     * @param int $statusId Status ID number. The status list can be retrieved using getOrderStatusList.
+     * @param array<int, int> $orderIds
+     * @param int $statusId
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->setOrderStatuses([3754894, 3754895], 2)
-     *
-     * @see https://api.baselinker.com/index.php?method=setOrderStatuses
+     * @see https://api.baselinker.com/?method=setOrderStatuses
      */
-    public function setOrderStatuses(
-        array $orderIds,
-        int $statusId,
-    )
+    public function setOrderStatuses(array $orderIds, int $statusId): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -970,27 +948,22 @@ class Order extends LaravelBaselinker
     /**
      * The method allows you to mark orders with a receipt already issued.
      *
-     * @param int $receiptId Receipt_id number received in the getNewReceipts method
-     * @param string $receiptNr The number of the issued receipt (may be blank if the printer does not return the number)
-     * @param int $date Receipt printing date (unixtime format)
-     * @param bool $printerError Flag indicating whether an error occurred during receipt printing (false by default)
+     * @param int $receiptId
+     * @param string $receiptNr
+     * @param int $date Receipt date (unix timestamp)
+     * @param bool $printerError Error occurred during printing
      * @param string|null $printerName
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->setOrderReceipt(143476260, 'FV/2015/10/12/0001', 1444736731)
-     *
-     * @see https://api.baselinker.com/index.php?method=setOrderReceipt
+     * @see https://api.baselinker.com/?method=setOrderReceipt
      */
     public function setOrderReceipt(
         int $receiptId,
         string $receiptNr,
         int $date,
         bool $printerError = false,
-        ?string $printerName = null,
-    )
-    {
+        ?string $printerName = null
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
@@ -1006,25 +979,16 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to add an external PDF file to an invoice previously issued from BaseLinker.
-     * It enables replacing a standard invoice from BaseLinker with an invoice issued e.g. in an ERP program.
+     * The method allows you to add an external PDF file to an invoice.
      *
-     * @param int $invoiceId BaseLinker invoice identifier
-     * @param string $file Invoice PDF file in binary format encoded in base64, at the very beginning of the invoice string provide a prefix "data:" e.g. "data:4AAQSkSzkJRgABA[...]"
-     * @param string|null $externalInvoiceNumber External system invoice number (overwrites BaseLinker invoice number)
+     * @param int $invoiceId
+     * @param string $file Base64 encoded PDF with "data:" prefix
+     * @param string|null $externalInvoiceNumber
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->addOrderInvoiceFile(143476260, 'data:4AAQSkZJRgABA[...]', 'FV/2015/10/12/0001')
-     *
-     * @see https://api.baselinker.com/index.php?method=addOrderInvoiceFile
+     * @see https://api.baselinker.com/?method=addOrderInvoiceFile
      */
-    public function addOrderInvoiceFile(
-        int $invoiceId,
-        string $file,
-        ?string $externalInvoiceNumber = null,
-    )
+    public function addOrderInvoiceFile(int $invoiceId, string $file, ?string $externalInvoiceNumber = null): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -1039,25 +1003,16 @@ class Order extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to add an external PDF file to a receipt previously issued from BaseLinker.
-     * It enables replacing a standard receipt from BaseLinker with a receipt issued e.g. in an ERP program.
+     * The method allows you to add an external PDF file to a receipt.
      *
-     * @param int $receiptId BaseLinker receipt identifier
-     * @param string $file Receipt PDF file in binary format encoded in base64, at the very beginning of the receipt string provide a prefix "data:" e.g. "data:4AAQSkSzkJRgABA[...]"
-     * @param string|null $externalReceiptNumber External system receipt number (overwrites BaseLinker receipt number)
+     * @param int $receiptId
+     * @param string $file Base64 encoded PDF with "data:" prefix
+     * @param string|null $externalReceiptNumber
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->addOrderReceiptFile(143476260, 'data:4AAQSkZJRgABA[...]', 'FV/2015/10/12/0001')
-     *
-     * @see https://api.baselinker.com/index.php?method=addOrderReceiptFile
+     * @see https://api.baselinker.com/?method=addOrderReceiptFile
      */
-    public function addOrderReceiptFile(
-        int $receiptId,
-        string $file,
-        ?string $externalReceiptNumber = null,
-    )
+    public function addOrderReceiptFile(int $receiptId, string $file, ?string $externalReceiptNumber = null): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -1074,16 +1029,12 @@ class Order extends LaravelBaselinker
     /**
      * The method allows you to get the invoice file from BaseLinker.
      *
-     * @param int $invoiceId BaseLinker invoice identifier
+     * @param int $invoiceId
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->getInvoiceFile(153845)
-     *
-     * @see https://api.baselinker.com/index.php?method=getInvoiceFile
+     * @see https://api.baselinker.com/?method=getInvoiceFile
      */
-    public function getInvoiceFile(int $invoiceId)
+    public function getInvoiceFile(int $invoiceId): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -1100,18 +1051,11 @@ class Order extends LaravelBaselinker
      *
      * @param int $orderId
      * @param int $triggerId
+     * @return array<string, mixed>
      *
-     * @return array
-     *
-     * Example:
-     * ->runOrderMacroTrigger(153845, 12413)
-     *
-     * @see https://api.baselinker.com/index.php?method=runOrderMacroTrigger
+     * @see https://api.baselinker.com/?method=runOrderMacroTrigger
      */
-    public function runOrderMacroTrigger(
-        int $orderId,
-        int $triggerId,
-    )
+    public function runOrderMacroTrigger(int $orderId, int $triggerId): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
@@ -1119,6 +1063,396 @@ class Order extends LaravelBaselinker
                 'order_id' => $orderId,
                 'trigger_id' => $triggerId,
             ]),
+        ]);
+
+        return $response->json();
+    }
+
+    // ==================== ORDER RETURNS ====================
+
+    /**
+     * The method allows you to download a list of order return events.
+     *
+     * @param int $lastLogId Log ID to start from
+     * @param array<int, int> $logsTypes Event ID list
+     * @param int|null $orderReturnId Order return ID
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderReturnJournalList
+     */
+    public function getOrderReturnJournalList(int $lastLogId, array $logsTypes, ?int $orderReturnId = null): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'last_log_id' => $lastLogId,
+                'logs_types' => $logsTypes,
+                'order_return_id' => $orderReturnId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows adding a new order return.
+     *
+     * @param int $orderId Original order ID
+     * @param int $orderReturnStatusId Return status ID
+     * @param string|null $adminComments
+     * @param array<int, array<string, mixed>>|null $products Products to return
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=addOrderReturn
+     */
+    public function addOrderReturn(
+        int $orderId,
+        int $orderReturnStatusId,
+        ?string $adminComments = null,
+        ?array $products = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_id' => $orderId,
+                'order_return_status_id' => $orderReturnStatusId,
+                'admin_comments' => $adminComments,
+                'products' => $products,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method returns extra fields defined for order returns.
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderReturnExtraFields
+     */
+    public function getOrderReturnExtraFields(): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to download order returns.
+     *
+     * @param int|null $orderReturnId Return ID
+     * @param int|null $orderId Original order ID
+     * @param int|null $dateFrom Date from (unix timestamp)
+     * @param int|null $idFrom Return ID to start from
+     * @param int|null $statusId Filter by status
+     * @param bool $includeCustomExtraFields Include extra fields
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderReturns
+     */
+    public function getOrderReturns(
+        ?int $orderReturnId = null,
+        ?int $orderId = null,
+        ?int $dateFrom = null,
+        ?int $idFrom = null,
+        ?int $statusId = null,
+        bool $includeCustomExtraFields = false
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+                'order_id' => $orderId,
+                'date_from' => $dateFrom,
+                'id_from' => $idFrom,
+                'status_id' => $statusId,
+                'include_custom_extra_fields' => $includeCustomExtraFields,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to download order return statuses.
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderReturnStatusList
+     */
+    public function getOrderReturnStatusList(): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to retrieve payment/refund history for an order return.
+     *
+     * @param int $orderReturnId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderReturnPaymentsHistory
+     */
+    public function getOrderReturnPaymentsHistory(int $orderReturnId): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to edit order return fields.
+     *
+     * @param int $orderReturnId
+     * @param string|null $adminComments
+     * @param array<int, mixed>|null $customExtraFields
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=setOrderReturnFields
+     */
+    public function setOrderReturnFields(
+        int $orderReturnId,
+        ?string $adminComments = null,
+        ?array $customExtraFields = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+                'admin_comments' => $adminComments,
+                'custom_extra_fields' => $customExtraFields,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows to add a product to an order return.
+     *
+     * @param int $orderReturnId
+     * @param int $orderProductId Original order product ID
+     * @param int $quantity Quantity to return
+     * @param int|null $reasonId Return reason ID
+     * @param int|null $productStatusId Product status ID
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=addOrderReturnProduct
+     */
+    public function addOrderReturnProduct(
+        int $orderReturnId,
+        int $orderProductId,
+        int $quantity,
+        ?int $reasonId = null,
+        ?int $productStatusId = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+                'order_product_id' => $orderProductId,
+                'quantity' => $quantity,
+                'reason_id' => $reasonId,
+                'product_status_id' => $productStatusId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows to edit a product in an order return.
+     *
+     * @param int $orderReturnId
+     * @param int $orderReturnProductId
+     * @param int $quantity
+     * @param int|null $reasonId
+     * @param int|null $productStatusId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=setOrderReturnProductFields
+     */
+    public function setOrderReturnProductFields(
+        int $orderReturnId,
+        int $orderReturnProductId,
+        int $quantity,
+        ?int $reasonId = null,
+        ?int $productStatusId = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+                'order_return_product_id' => $orderReturnProductId,
+                'quantity' => $quantity,
+                'reason_id' => $reasonId,
+                'product_status_id' => $productStatusId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows to delete a product from an order return.
+     *
+     * @param int $orderReturnId
+     * @param int $orderReturnProductId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=deleteOrderReturnProduct
+     */
+    public function deleteOrderReturnProduct(int $orderReturnId, int $orderReturnProductId): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+                'order_return_product_id' => $orderReturnProductId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows to add a refund to an order return.
+     *
+     * @param int $orderReturnId
+     * @param float $refundDone Refund amount
+     * @param int $refundDate Refund date (unix timestamp)
+     * @param string $refundComment
+     * @param string|null $externalRefundId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=setOrderReturnRefund
+     */
+    public function setOrderReturnRefund(
+        int $orderReturnId,
+        float $refundDone,
+        int $refundDate,
+        string $refundComment,
+        ?string $externalRefundId = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+                'refund_done' => $refundDone,
+                'refund_date' => $refundDate,
+                'refund_comment' => $refundComment,
+                'external_refund_id' => $externalRefundId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to download return reasons list.
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderReturnReasonsList
+     */
+    public function getOrderReturnReasonsList(): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to change order return status.
+     *
+     * @param int $orderReturnId
+     * @param int $statusId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=setOrderReturnStatus
+     */
+    public function setOrderReturnStatus(int $orderReturnId, int $statusId): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+                'status_id' => $statusId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to batch change order return statuses.
+     *
+     * @param array<int, int> $orderReturnIds
+     * @param int $statusId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=setOrderReturnStatuses
+     */
+    public function setOrderReturnStatuses(array $orderReturnIds, int $statusId): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_ids' => $orderReturnIds,
+                'status_id' => $statusId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to run a macro trigger for order returns.
+     *
+     * @param int $orderReturnId
+     * @param int $triggerId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=runOrderReturnMacroTrigger
+     */
+    public function runOrderReturnMacroTrigger(int $orderReturnId, int $triggerId): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_return_id' => $orderReturnId,
+                'trigger_id' => $triggerId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to download order return product statuses.
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderReturnProductStatuses
+     */
+    public function getOrderReturnProductStatuses(): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
         ]);
 
         return $response->json();

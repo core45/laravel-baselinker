@@ -37,9 +37,9 @@ class BaselinkerServiceProvider extends ServiceProvider
     /**
      * Get the services provided by the provider.
      *
-     * @return array
+     * @return array<int, string>
      */
-    public function provides()
+    public function provides(): array
     {
         return ['baselinker'];
     }
