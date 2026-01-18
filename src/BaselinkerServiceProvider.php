@@ -11,7 +11,7 @@ class BaselinkerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/laravel-baselinker.php', 'baselinker');
+        $this->mergeConfigFrom(__DIR__.'/../config/baselinker.php', 'baselinker');
 
         // Register the service the package provides.
         $this->app->singleton('baselinker', function ($app) {
@@ -28,7 +28,7 @@ class BaselinkerServiceProvider extends ServiceProvider
         // ============ Publish assets with php artisan vendor:publish ============
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/laravel-baselinker.php' => config_path('laravel-baselinker.php'),
+                __DIR__.'/../config/baselinker.php' => config_path('baselinker.php'),
             ], 'laravel-baselinker');
         }
     }

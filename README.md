@@ -3,7 +3,7 @@
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-A comprehensive Laravel package for integrating with the [Baselinker/Base.com](https://baselinker.com) API. This package provides a clean, fluent interface to interact with all Baselinker API endpoints.
+A comprehensive Laravel package for integrating with the [Baselinker/Base.com](https://baselinker.com) API. This package provides a clean, fluent interface for the Catalog, External Storage, Order, and Shipment modules.
 
 ## Requirements
 
@@ -64,14 +64,15 @@ $inventories = Baselinker::catalog()->getInventories();
 
 // Add a new inventory
 $result = Baselinker::catalog()->addInventory(
-    inventoryId: 0, // 0 for new inventory
     name: 'Main Warehouse',
     description: 'Primary product warehouse',
     languages: ['en', 'pl'],
     defaultLanguage: 'en',
     priceGroups: [1, 2],
     defaultPriceGroup: 1,
-    warehouses: ['bl_123']
+    warehouses: ['bl_123'],
+    defaultWarehouse: 'bl_123',
+    reservations: true
 );
 ```
 
@@ -251,16 +252,41 @@ $orders = Baselinker::order()->getOrders(
 $result = Baselinker::order()->addOrder(
     orderStatusId: 1234,
     dateAdd: time(),
-    userComments: 'Please deliver before 5 PM',
-    adminComments: 'VIP customer',
-    phone: '+48123456789',
-    email: 'customer@example.com',
-    userLogin: 'johndoe',
     currency: 'EUR',
     paymentMethod: 'PayPal',
-    paymentMethodCod: false,
-    paidAmount: 199.99,
-    wantInvoice: true,
+    paymentMethodCod: 0,
+    paid: 1,
+    userComments: 'Please deliver before 5 PM',
+    adminComments: 'VIP customer',
+    email: 'customer@example.com',
+    phone: '+48123456789',
+    userLogin: 'johndoe',
+    deliveryMethod: 'DPD',
+    deliveryPrice: 9.99,
+    deliveryFullname: 'John Doe',
+    deliveryCompany: 'ACME Inc.',
+    deliveryAddress: '123 Main Street',
+    deliveryPostcode: '00-001',
+    deliveryCity: 'Warsaw',
+    deliveryState: '',
+    deliveryCountryCode: 'PL',
+    deliveryPointId: '',
+    deliveryPointName: '',
+    deliveryPointAddress: '',
+    deliveryPointPostcode: '',
+    deliveryPointCity: '',
+    invoiceFullname: 'John Doe',
+    invoiceCompany: 'ACME Inc.',
+    invoiceNip: 'PL1234567890',
+    invoiceAddress: '123 Main Street',
+    invoicePostcode: '00-001',
+    invoiceCity: 'Warsaw',
+    invoiceState: '',
+    invoiceCountryCode: 'PL',
+    wantInvoice: 1,
+    extraField1: '',
+    extraField2: '',
+    customExtraFields: [],
     products: [
         [
             'storage' => 'bl',
@@ -275,15 +301,7 @@ $result = Baselinker::order()->addOrder(
             'quantity' => 2,
             'weight' => 0.5
         ]
-    ],
-    deliveryMethod: 'DPD',
-    deliveryPrice: 9.99,
-    deliveryFullname: 'John Doe',
-    deliveryCompany: 'ACME Inc.',
-    deliveryAddress: '123 Main Street',
-    deliveryPostcode: '00-001',
-    deliveryCity: 'Warsaw',
-    deliveryCountryCode: 'PL'
+    ]
 );
 
 // Update order fields
@@ -380,29 +398,33 @@ $result = Baselinker::order()->addInvoice(
 // Get return reasons
 $reasons = Baselinker::order()->getOrderReturnReasonsList();
 
-// Add return reason
-$result = Baselinker::order()->addOrderReturnReason(name: 'Defective product');
-
 // Get order return journal
-$journal = Baselinker::order()->getOrderReturnJournalList(lastLogId: 0);
+$journal = Baselinker::order()->getOrderReturnJournalList(
+    lastLogId: 0,
+    logsTypes: [1, 2]
+);
 
 // Get returns
 $returns = Baselinker::order()->getOrderReturns(
-    returnId: null,
+    orderReturnId: null,
+    orderId: null,
     dateFrom: 1609459200,
     idFrom: null,
-    statusId: null
+    statusId: null,
+    includeCustomExtraFields: true
 );
 
 // Add a return
 $result = Baselinker::order()->addOrderReturn(
     orderId: 6910995,
-    returnReasonId: 1,
     orderReturnStatusId: 100,
-    refundedAmount: 99.99,
+    adminComments: 'Return created by support',
     products: [
         ['order_product_id' => 12345, 'quantity' => 1]
-    ]
+    ],
+    dateAdd: time(),
+    currency: 'EUR',
+    refunded: false
 );
 
 // Set return status
@@ -485,7 +507,7 @@ $protocol = Baselinker::shipment()->getProtocol(
 $fields = Baselinker::shipment()->getRequestParcelPickupFields(courierCode: 'dpd');
 
 // Request parcel pickup
-$result = Baselinker::shipment()->requestParcelPickup(
+$result = Baselinker::shipment()->runRequestParcelPickup(
     courierCode: 'dpd',
     packageIds: [123456, 123457],
     fields: [
@@ -510,7 +532,7 @@ The configuration file (`config/baselinker.php`) contains:
 
 ```php
 return [
-    'token' => env('BASELINKER_TOKEN', ''),
+    'token' => env('BASELINKER_TOKEN'),
     'debug' => env('BASELINKER_DEBUG', false),
     'verify' => env('BASELINKER_VERIFY', true), // SSL verification
 ];

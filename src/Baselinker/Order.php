@@ -270,20 +270,40 @@ class Order extends LaravelBaselinker
      * The method allows you to retrieve transaction details for a selected order.
      *
      * @param int $orderId
+     * @param bool|null $includeComplexTaxes Include detailed tax breakdown
+     * @param bool|null $includeAmazonData Include legacy Amazon fulfillment data
      * @return array<string, mixed>
      *
-     * @see https://api.baselinker.com/?method=getOrderTransactionDetails
+     * @see https://api.baselinker.com/?method=getOrderTransactionData
      */
-    public function getOrderTransactionDetails(int $orderId): array
-    {
+    public function getOrderTransactionData(
+        int $orderId,
+        ?bool $includeComplexTaxes = null,
+        ?bool $includeAmazonData = null
+    ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
+                'include_complex_taxes' => $includeComplexTaxes,
+                'include_amazon_data' => $includeAmazonData,
             ]),
         ]);
 
         return $response->json();
+    }
+
+    /**
+     * Alias for getOrderTransactionData.
+     *
+     * @param int $orderId
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderTransactionData
+     */
+    public function getOrderTransactionDetails(int $orderId): array
+    {
+        return $this->getOrderTransactionData($orderId);
     }
 
     /**
@@ -340,6 +360,63 @@ class Order extends LaravelBaselinker
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_ids' => $orderIds,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to split selected products into a new order.
+     *
+     * @param int $orderId Order ID to split
+     * @param array<int, array{order_product_id: int, quantity: int}> $itemsToSplit Items to move
+     * @param float|null $deliveryCostToSplit Delivery cost to transfer to the new order
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=addOrderBySplit
+     */
+    public function addOrderBySplit(
+        int $orderId,
+        array $itemsToSplit,
+        ?float $deliveryCostToSplit = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'order_id' => $orderId,
+                'items_to_split' => $itemsToSplit,
+                'delivery_cost_to_split' => $deliveryCostToSplit,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to merge multiple orders into one.
+     *
+     * @param int $mainOrderId Main order ID
+     * @param array<int, int> $orderIdsToMerge Order IDs to merge
+     * @param string $mergeMode Merge mode (technical_merge or into_main_order)
+     * @param bool $sumDeliveryCosts Sum delivery costs from merged orders
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=setOrdersMerge
+     */
+    public function setOrdersMerge(
+        int $mainOrderId,
+        array $orderIdsToMerge,
+        string $mergeMode,
+        bool $sumDeliveryCosts = false
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'main_order_id' => $mainOrderId,
+                'order_ids_to_merge' => $orderIdsToMerge,
+                'merge_mode' => $mergeMode,
+                'sum_delivery_costs' => $sumDeliveryCosts,
             ]),
         ]);
 
@@ -622,6 +699,10 @@ class Order extends LaravelBaselinker
      * @param string|null $extraField1
      * @param string|null $extraField2
      * @param array<int, mixed>|null $customExtraFields
+     * @param string|null $extraField1
+     * @param string|null $extraField2
+     * @param string|null $extraField1
+     * @param string|null $extraField2
      * @param string|null $pickState
      * @param string|null $packState
      * @return array<string, mixed>
@@ -1047,6 +1128,22 @@ class Order extends LaravelBaselinker
     }
 
     /**
+     * The method allows you to retrieve order printout templates.
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getOrderPrintoutTemplates
+     */
+    public function getOrderPrintoutTemplates(): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+        ]);
+
+        return $response->json();
+    }
+
+    /**
      * The method runOrderMacroTrigger allows you to run personal trigger for orders automatic actions.
      *
      * @param int $orderId
@@ -1075,7 +1172,7 @@ class Order extends LaravelBaselinker
      *
      * @param int $lastLogId Log ID to start from
      * @param array<int, int> $logsTypes Event ID list
-     * @param int|null $orderReturnId Order return ID
+     * @param int|null $orderReturnId Return ID
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getOrderReturnJournalList
@@ -1087,7 +1184,7 @@ class Order extends LaravelBaselinker
             'parameters' => json_encode([
                 'last_log_id' => $lastLogId,
                 'logs_types' => $logsTypes,
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
             ]),
         ]);
 
@@ -1097,27 +1194,93 @@ class Order extends LaravelBaselinker
     /**
      * The method allows adding a new order return.
      *
-     * @param int $orderId Original order ID
+     * @param int|null $orderId Original order ID
      * @param int $orderReturnStatusId Return status ID
      * @param string|null $adminComments
      * @param array<int, array<string, mixed>>|null $products Products to return
+     * @param int|null $customSourceId Custom order return source ID
+     * @param string|null $referenceNumber External reference number
+     * @param int|null $dateAdd Date of return creation (unix timestamp)
+     * @param string|null $currency 3-letter currency code
+     * @param bool|null $refunded Mark return as refunded
+     * @param string|null $email Buyer email
+     * @param string|null $phone Buyer phone
+     * @param string|null $userLogin Marketplace user login
+     * @param float|null $deliveryPrice Gross delivery price
+     * @param string|null $deliveryFullname Delivery fullname
+     * @param string|null $deliveryCompany Delivery company
+     * @param string|null $deliveryAddress Delivery address
+     * @param string|null $deliveryPostcode Delivery postcode
+     * @param string|null $deliveryCity Delivery city
+     * @param string|null $deliveryState Delivery state
+     * @param string|null $deliveryCountryCode Delivery country code
+     * @param string|null $extraField1 Extra field 1
+     * @param string|null $extraField2 Extra field 2
+     * @param array<int, mixed>|null $customExtraFields Custom extra fields
+     * @param string|null $refundAccountNumber Refund account number
+     * @param string|null $refundIban Refund IBAN
+     * @param string|null $refundSwift Refund SWIFT
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=addOrderReturn
      */
     public function addOrderReturn(
-        int $orderId,
+        ?int $orderId,
         int $orderReturnStatusId,
         ?string $adminComments = null,
-        ?array $products = null
+        ?array $products = null,
+        ?int $customSourceId = null,
+        ?string $referenceNumber = null,
+        ?int $dateAdd = null,
+        ?string $currency = null,
+        ?bool $refunded = null,
+        ?string $email = null,
+        ?string $phone = null,
+        ?string $userLogin = null,
+        ?float $deliveryPrice = null,
+        ?string $deliveryFullname = null,
+        ?string $deliveryCompany = null,
+        ?string $deliveryAddress = null,
+        ?string $deliveryPostcode = null,
+        ?string $deliveryCity = null,
+        ?string $deliveryState = null,
+        ?string $deliveryCountryCode = null,
+        ?string $extraField1 = null,
+        ?string $extraField2 = null,
+        ?array $customExtraFields = null,
+        ?string $refundAccountNumber = null,
+        ?string $refundIban = null,
+        ?string $refundSwift = null
     ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
-                'order_return_status_id' => $orderReturnStatusId,
+                'status_id' => $orderReturnStatusId,
+                'custom_source_id' => $customSourceId,
+                'reference_number' => $referenceNumber,
+                'date_add' => $dateAdd,
+                'currency' => $currency,
+                'refunded' => $refunded,
                 'admin_comments' => $adminComments,
+                'email' => $email,
+                'phone' => $phone,
+                'user_login' => $userLogin,
+                'delivery_price' => $deliveryPrice,
+                'delivery_fullname' => $deliveryFullname,
+                'delivery_company' => $deliveryCompany,
+                'delivery_address' => $deliveryAddress,
+                'delivery_postcode' => $deliveryPostcode,
+                'delivery_city' => $deliveryCity,
+                'delivery_state' => $deliveryState,
+                'delivery_country_code' => $deliveryCountryCode,
+                'extra_field_1' => $extraField1,
+                'extra_field_2' => $extraField2,
+                'custom_extra_fields' => $customExtraFields,
                 'products' => $products,
+                'refund_account_number' => $refundAccountNumber,
+                'refund_iban' => $refundIban,
+                'refund_swift' => $refundSwift,
             ]),
         ]);
 
@@ -1149,6 +1312,9 @@ class Order extends LaravelBaselinker
      * @param int|null $idFrom Return ID to start from
      * @param int|null $statusId Filter by status
      * @param bool $includeCustomExtraFields Include extra fields
+     * @param string|null $filterOrderReturnSource Filter by return source
+     * @param int|null $filterOrderReturnSourceId Filter by return source ID
+     * @param bool $includeConnectData Include Base Connect data
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getOrderReturns
@@ -1159,17 +1325,23 @@ class Order extends LaravelBaselinker
         ?int $dateFrom = null,
         ?int $idFrom = null,
         ?int $statusId = null,
-        bool $includeCustomExtraFields = false
+        bool $includeCustomExtraFields = false,
+        ?string $filterOrderReturnSource = null,
+        ?int $filterOrderReturnSourceId = null,
+        bool $includeConnectData = false
     ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
                 'order_id' => $orderId,
                 'date_from' => $dateFrom,
                 'id_from' => $idFrom,
                 'status_id' => $statusId,
                 'include_custom_extra_fields' => $includeCustomExtraFields,
+                'filter_order_return_source' => $filterOrderReturnSource,
+                'filter_order_return_source_id' => $filterOrderReturnSourceId,
+                'include_connect_data' => $includeConnectData,
             ]),
         ]);
 
@@ -1196,16 +1368,18 @@ class Order extends LaravelBaselinker
      * The method allows you to retrieve payment/refund history for an order return.
      *
      * @param int $orderReturnId
+     * @param bool $showFullHistory
      * @return array<string, mixed>
      *
      * @see https://api.baselinker.com/?method=getOrderReturnPaymentsHistory
      */
-    public function getOrderReturnPaymentsHistory(int $orderReturnId): array
+    public function getOrderReturnPaymentsHistory(int $orderReturnId, bool $showFullHistory = false): array
     {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
+                'show_full_history' => $showFullHistory,
             ]),
         ]);
 
@@ -1225,14 +1399,18 @@ class Order extends LaravelBaselinker
     public function setOrderReturnFields(
         int $orderReturnId,
         ?string $adminComments = null,
-        ?array $customExtraFields = null
+        ?array $customExtraFields = null,
+        ?string $extraField1 = null,
+        ?string $extraField2 = null
     ): array {
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
                 'admin_comments' => $adminComments,
                 'custom_extra_fields' => $customExtraFields,
+                'extra_field_1' => $extraField1,
+                'extra_field_2' => $extraField2,
             ]),
         ]);
 
@@ -1261,7 +1439,7 @@ class Order extends LaravelBaselinker
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
                 'order_product_id' => $orderProductId,
                 'quantity' => $quantity,
                 'reason_id' => $reasonId,
@@ -1294,7 +1472,7 @@ class Order extends LaravelBaselinker
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
                 'order_return_product_id' => $orderReturnProductId,
                 'quantity' => $quantity,
                 'reason_id' => $reasonId,
@@ -1319,7 +1497,7 @@ class Order extends LaravelBaselinker
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
                 'order_return_product_id' => $orderReturnProductId,
             ]),
         ]);
@@ -1349,7 +1527,7 @@ class Order extends LaravelBaselinker
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
                 'refund_done' => $refundDone,
                 'refund_date' => $refundDate,
                 'refund_comment' => $refundComment,
@@ -1390,7 +1568,7 @@ class Order extends LaravelBaselinker
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
                 'status_id' => $statusId,
             ]),
         ]);
@@ -1412,7 +1590,7 @@ class Order extends LaravelBaselinker
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_ids' => $orderReturnIds,
+                'return_ids' => $orderReturnIds,
                 'status_id' => $statusId,
             ]),
         ]);
@@ -1434,7 +1612,7 @@ class Order extends LaravelBaselinker
         $response = $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
-                'order_return_id' => $orderReturnId,
+                'return_id' => $orderReturnId,
                 'trigger_id' => $triggerId,
             ]),
         ]);

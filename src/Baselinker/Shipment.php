@@ -254,6 +254,40 @@ class Shipment extends LaravelBaselinker
     }
 
     /**
+     * The method allows you to download a courier document.
+     *
+     * @param string $courierCode Courier code
+     * @param string $documentType Document type (e.g. "manifest")
+     * @param int|null $accountId Courier API account id from getCourierAccounts
+     * @param array<int>|null $packageIds Array of shipment IDs (optional if packageNumbers provided)
+     * @param array<string>|null $packageNumbers Array of shipment numbers (optional if packageIds provided)
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getCourierDocument
+     */
+    public function getCourierDocument(
+        string $courierCode,
+        string $documentType,
+        ?int $accountId = null,
+        ?array $packageIds = null,
+        ?array $packageNumbers = null
+    ): array {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'courier_code' => $courierCode,
+                'document_type' => $documentType,
+                'account_id' => $accountId,
+                'package_ids' => $packageIds,
+                'package_numbers' => $packageNumbers,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
      * The method allows you to download shipments previously created for the selected order.
      *
      * @param int $orderId Order ID
@@ -271,6 +305,26 @@ class Shipment extends LaravelBaselinker
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
+            ]),
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * The method allows you to retrieve package details.
+     *
+     * @param int $packageId Shipment ID
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getPackageDetails
+     */
+    public function getPackageDetails(int $packageId): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+            'parameters' => json_encode([
+                'package_id' => $packageId,
             ]),
         ]);
 
@@ -338,11 +392,10 @@ class Shipment extends LaravelBaselinker
     }
 
     /**
-     * The method allows you to request a parcel pickup for previously created shipments.
-     * Sends a parcel pickup request to courier API if the courier API allows it.
+     * Alias for runRequestParcelPickup.
      *
      * @param string $courierCode Courier code
-     * @param array<int> $packageIds Array of shipment IDs (optional if packageNumbers provided)
+     * @param array<int>|null $packageIds Array of shipment IDs (optional if packageNumbers provided)
      * @param array<string>|null $packageNumbers Array of shipment numbers (optional if packageIds provided)
      * @param int|null $accountId Courier API account id from getCourierAccounts
      * @param array<int, array{id: string, value: string}>|null $fields List of fields from getRequestParcelPickupFields
@@ -350,11 +403,42 @@ class Shipment extends LaravelBaselinker
      *
      * @return array<string, mixed>
      *
-     * @see https://api.baselinker.com/?method=requestParcelPickup
+     * @see https://api.baselinker.com/?method=runRequestParcelPickup
      */
     public function requestParcelPickup(
         string $courierCode,
-        array $packageIds,
+        ?array $packageIds = null,
+        ?array $packageNumbers = null,
+        ?int $accountId = null,
+        ?array $fields = null
+    ): array {
+        return $this->runRequestParcelPickup(
+            $courierCode,
+            $packageIds,
+            $packageNumbers,
+            $accountId,
+            $fields
+        );
+    }
+
+    /**
+     * The method allows you to request a parcel pickup for previously created shipments.
+     * Sends a parcel pickup request to courier API if the courier API allows it.
+     *
+     * @param string $courierCode Courier code
+     * @param array<int>|null $packageIds Array of shipment IDs (optional if packageNumbers provided)
+     * @param array<string>|null $packageNumbers Array of shipment numbers (optional if packageIds provided)
+     * @param int|null $accountId Courier API account id from getCourierAccounts
+     * @param array<int, array{id: string, value: string}>|null $fields List of fields from getRequestParcelPickupFields
+     *                                                                   Example: [["id" => "pickup_date", "value" => "1642416311"]]
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=runRequestParcelPickup
+     */
+    public function runRequestParcelPickup(
+        string $courierCode,
+        ?array $packageIds = null,
         ?array $packageNumbers = null,
         ?int $accountId = null,
         ?array $fields = null

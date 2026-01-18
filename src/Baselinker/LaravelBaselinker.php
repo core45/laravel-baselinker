@@ -19,14 +19,17 @@ class LaravelBaselinker
     public function __construct()
     {
         $token = config('baselinker.token');
+        if (empty($token)) {
+            $token = config('laravel-baselinker.token');
+        }
 
         if (empty($token)) {
             throw BaselinkerException::missingToken();
         }
 
         $this->token = $token;
-        $this->debug = config('baselinker.debug', false);
-        $this->verify = config('baselinker.verify', true);
+        $this->debug = config('baselinker.debug') ?? config('laravel-baselinker.debug', false);
+        $this->verify = config('baselinker.verify') ?? config('laravel-baselinker.verify', true);
     }
 
     /**

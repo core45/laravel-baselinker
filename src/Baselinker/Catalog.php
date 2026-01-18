@@ -1242,4 +1242,20 @@ class Catalog extends LaravelBaselinker
 
         return $response->json();
     }
+
+    /**
+     * The method allows you to retrieve inventory printout templates.
+     *
+     * @return array<string, mixed>
+     *
+     * @see https://api.baselinker.com/?method=getInventoryPrintoutTemplates
+     */
+    public function getInventoryPrintoutTemplates(): array
+    {
+        $response = $this->makeRequest([
+            'method' => __FUNCTION__,
+        ]);
+
+        return $response->json();
+    }
 }
