@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Exceptions;
 
@@ -19,11 +19,11 @@ class BaselinkerException extends Exception
     /**
      * Create a new exception for API errors.
      */
-    public static function apiError(string $message, int $statusCode): self
+    public static function apiError(string $message, int $errorCode = 0): self
     {
         return new self(
-            "Baselinker API error (HTTP {$statusCode}): {$message}",
-            $statusCode
+            "Baselinker API error: {$message}",
+            $errorCode
         );
     }
 }

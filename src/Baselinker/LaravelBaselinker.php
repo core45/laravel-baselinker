@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Baselinker;
 
@@ -37,9 +37,11 @@ class LaravelBaselinker
      *
      * @param array<string, mixed> $parameters
      *
+     * @return array<string, mixed>
+     * @throws BaselinkerException
      * @throws \Illuminate\Http\Client\RequestException
      */
-    protected function makeRequest(array $parameters): Response
+    protected function makeRequest(array $parameters): array
     {
         $response = Http::withOptions([
             'debug' => $this->debug,
@@ -51,6 +53,15 @@ class LaravelBaselinker
         // Throw exception for HTTP 4xx/5xx errors
         $response->throw();
 
-        return $response;
+        $data = $response->json();
+
+        if (isset($data['status']) && $data['status'] === 'ERROR') {
+            throw BaselinkerException::apiError(
+                $data['error_message'] ?? 'Unknown API error',
+                (int) ($data['error_code'] ?? 0)
+            );
+        }
+
+        return $data;
     }
 }

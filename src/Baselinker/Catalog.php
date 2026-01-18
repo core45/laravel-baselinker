@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Baselinker;
 
@@ -22,7 +22,7 @@ class Catalog extends LaravelBaselinker
         string $currency,
         ?int $priceGroupId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'price_group_id' => $priceGroupId,
@@ -31,8 +31,6 @@ class Catalog extends LaravelBaselinker
                 'currency' => $currency,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -45,14 +43,12 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryPriceGroup(int $priceGroupId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'price_group_id' => $priceGroupId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -64,11 +60,9 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryPriceGroups(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -89,7 +83,7 @@ class Catalog extends LaravelBaselinker
         bool $stockEdition = false,
         ?int $warehouseId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'warehouse_id' => $warehouseId,
@@ -98,8 +92,6 @@ class Catalog extends LaravelBaselinker
                 'stock_edition' => $stockEdition,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -112,14 +104,12 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryWarehouse(int $warehouseId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'warehouse_id' => $warehouseId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -131,11 +121,9 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryWarehouses(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -168,7 +156,7 @@ class Catalog extends LaravelBaselinker
         bool $reservations,
         ?int $inventoryId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -183,8 +171,6 @@ class Catalog extends LaravelBaselinker
                 'reservations' => $reservations,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -195,17 +181,12 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=deleteInventory
      */
-    public function deleteInventory(int $inventoryId): array
-    {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
             ]),
         ]);
-
-        return $response->json();
-    }
 
     /**
      * The method allows to get a list of catalogues from BaseLinker storage.
@@ -216,11 +197,9 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventories(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -241,7 +220,7 @@ class Catalog extends LaravelBaselinker
         ?int $inventoryId = null,
         ?int $categoryId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -250,8 +229,6 @@ class Catalog extends LaravelBaselinker
                 'parent_id' => $parentId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -264,14 +241,12 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryCategory(int $categoryId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'category_id' => $categoryId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -284,14 +259,12 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryCategories(?int $inventoryId = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -301,14 +274,9 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getInventoryTags
      */
-    public function getInventoryTags(): array
-    {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
-    }
 
     /**
      * The method allows you to add a new manufacturer in the BaseLinker catalogues.
@@ -324,15 +292,13 @@ class Catalog extends LaravelBaselinker
         string $name,
         ?int $manufacturerId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'manufacturer_id' => $manufacturerId,
                 'name' => $name,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -345,14 +311,12 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryManufacturer(int $manufacturerId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'manufacturer_id' => $manufacturerId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -362,14 +326,9 @@ class Catalog extends LaravelBaselinker
      *
      * @see https://api.baselinker.com/?method=getInventoryManufacturers
      */
-    public function getInventoryManufacturers(): array
-    {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
-    }
 
     /**
      * The method allows you to retrieve a list of extra fields for a BaseLinker catalog.
@@ -380,11 +339,9 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryExtraFields(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -397,14 +354,12 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryIntegrations(int $inventoryId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -417,14 +372,12 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryAvailableTextFieldKeys(int $inventoryId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -479,7 +432,7 @@ class Catalog extends LaravelBaselinker
         ?array $links = null,
         ?array $bundleProducts = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -505,8 +458,6 @@ class Catalog extends LaravelBaselinker
                 'bundle_products' => $bundleProducts,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -519,14 +470,12 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryProduct(int $productId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'product_id' => $productId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -540,15 +489,13 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryProductsData(int $inventoryId, array $products): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'products' => $products,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -584,7 +531,7 @@ class Catalog extends LaravelBaselinker
         ?int $page = null,
         ?string $filterSort = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -601,8 +548,6 @@ class Catalog extends LaravelBaselinker
                 'filter_sort' => $filterSort,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -616,15 +561,13 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryProductsStock(int $inventoryId, ?int $page = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -638,15 +581,13 @@ class Catalog extends LaravelBaselinker
      */
     public function updateInventoryProductsStock(int $inventoryId, array $products): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'products' => $products,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -660,15 +601,13 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryProductsPrices(int $inventoryId, ?int $page = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -682,15 +621,13 @@ class Catalog extends LaravelBaselinker
      */
     public function updateInventoryProductsPrices(int $inventoryId, array $products): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
                 'products' => $products,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -714,7 +651,7 @@ class Catalog extends LaravelBaselinker
         ?string $sort = null,
         ?int $page = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'product_id' => $productId,
@@ -725,8 +662,6 @@ class Catalog extends LaravelBaselinker
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -740,15 +675,13 @@ class Catalog extends LaravelBaselinker
      */
     public function runProductMacroTrigger(int $productId, int $triggerId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'product_id' => $productId,
                 'trigger_id' => $triggerId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     // ==================== INVENTORY DOCUMENTS ====================
@@ -776,7 +709,7 @@ class Catalog extends LaravelBaselinker
         ?string $description = null,
         ?array $items = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -788,8 +721,6 @@ class Catalog extends LaravelBaselinker
                 'items' => $items,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -802,14 +733,12 @@ class Catalog extends LaravelBaselinker
      */
     public function setInventoryDocumentStatusConfirmed(int $documentId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'document_id' => $documentId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -833,7 +762,7 @@ class Catalog extends LaravelBaselinker
         ?string $type = null,
         ?int $page = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -844,8 +773,6 @@ class Catalog extends LaravelBaselinker
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -859,15 +786,13 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryDocumentItems(int $documentId, ?int $page = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'document_id' => $documentId,
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -881,15 +806,13 @@ class Catalog extends LaravelBaselinker
      */
     public function addInventoryDocumentItems(int $documentId, array $items): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'document_id' => $documentId,
                 'items' => $items,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -901,11 +824,9 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryDocumentSeries(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     // ==================== SUPPLIERS & PAYERS ====================
@@ -919,11 +840,9 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventorySuppliers(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -955,7 +874,7 @@ class Catalog extends LaravelBaselinker
         ?string $phone = null,
         ?int $supplierId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'supplier_id' => $supplierId,
@@ -970,8 +889,6 @@ class Catalog extends LaravelBaselinker
                 'phone' => $phone,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -984,14 +901,12 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventorySupplier(int $supplierId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'supplier_id' => $supplierId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1003,11 +918,9 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryPayers(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1039,7 +952,7 @@ class Catalog extends LaravelBaselinker
         ?string $phone = null,
         ?int $payerId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'payer_id' => $payerId,
@@ -1054,8 +967,6 @@ class Catalog extends LaravelBaselinker
                 'phone' => $phone,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1068,14 +979,12 @@ class Catalog extends LaravelBaselinker
      */
     public function deleteInventoryPayer(int $payerId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'payer_id' => $payerId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     // ==================== PURCHASE ORDERS ====================
@@ -1103,7 +1012,7 @@ class Catalog extends LaravelBaselinker
         ?string $status = null,
         ?int $page = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -1115,8 +1024,6 @@ class Catalog extends LaravelBaselinker
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1130,15 +1037,13 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryPurchaseOrderItems(int $orderId, ?int $page = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1150,11 +1055,9 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryPurchaseOrderSeries(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1182,7 +1085,7 @@ class Catalog extends LaravelBaselinker
         ?int $expectedDeliveryDate = null,
         ?array $items = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'inventory_id' => $inventoryId,
@@ -1195,8 +1098,6 @@ class Catalog extends LaravelBaselinker
                 'items' => $items,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1210,15 +1111,13 @@ class Catalog extends LaravelBaselinker
      */
     public function addInventoryPurchaseOrderItems(int $orderId, array $items): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'items' => $items,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1232,15 +1131,13 @@ class Catalog extends LaravelBaselinker
      */
     public function setInventoryPurchaseOrderStatus(int $orderId, string $status): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'status' => $status,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1252,10 +1149,8 @@ class Catalog extends LaravelBaselinker
      */
     public function getInventoryPrintoutTemplates(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 }

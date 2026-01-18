@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Baselinker;
 
@@ -32,7 +32,7 @@ class Shipment extends LaravelBaselinker
         array $packages,
         ?int $accountId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -42,8 +42,6 @@ class Shipment extends LaravelBaselinker
                 'packages' => $packages,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -70,7 +68,7 @@ class Shipment extends LaravelBaselinker
         string $pickupDate,
         bool $returnShipment = false
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -80,8 +78,6 @@ class Shipment extends LaravelBaselinker
                 'return_shipment' => $returnShipment,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -96,11 +92,9 @@ class Shipment extends LaravelBaselinker
      */
     public function getCouriersList(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -117,14 +111,12 @@ class Shipment extends LaravelBaselinker
      */
     public function getCourierFields(string $courierCode): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -149,7 +141,7 @@ class Shipment extends LaravelBaselinker
         array $packages,
         ?int $accountId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -159,8 +151,6 @@ class Shipment extends LaravelBaselinker
                 'packages' => $packages,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -177,14 +167,12 @@ class Shipment extends LaravelBaselinker
      */
     public function getCourierAccounts(string $courierCode): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -206,7 +194,7 @@ class Shipment extends LaravelBaselinker
         int $packageId,
         ?string $packageNumber = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -214,8 +202,6 @@ class Shipment extends LaravelBaselinker
                 'package_number' => $packageNumber,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -240,7 +226,7 @@ class Shipment extends LaravelBaselinker
         ?array $packageNumbers = null,
         ?int $accountId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -249,8 +235,6 @@ class Shipment extends LaravelBaselinker
                 'account_id' => $accountId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -273,7 +257,7 @@ class Shipment extends LaravelBaselinker
         ?array $packageIds = null,
         ?array $packageNumbers = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -283,8 +267,6 @@ class Shipment extends LaravelBaselinker
                 'package_numbers' => $packageNumbers,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -301,14 +283,12 @@ class Shipment extends LaravelBaselinker
      */
     public function getOrderPackages(int $orderId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -321,14 +301,12 @@ class Shipment extends LaravelBaselinker
      */
     public function getPackageDetails(int $packageId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'package_id' => $packageId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -346,14 +324,12 @@ class Shipment extends LaravelBaselinker
      */
     public function getCourierPackagesStatusHistory(array $packageIds): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'package_ids' => $packageIds,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -378,7 +354,7 @@ class Shipment extends LaravelBaselinker
         ?string $packageNumber = null,
         bool $forceDelete = false
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -387,8 +363,6 @@ class Shipment extends LaravelBaselinker
                 'force_delete' => $forceDelete,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -413,11 +387,11 @@ class Shipment extends LaravelBaselinker
         ?array $fields = null
     ): array {
         return $this->runRequestParcelPickup(
-            $courierCode,
-            $packageIds,
-            $packageNumbers,
-            $accountId,
-            $fields
+            courierCode: $courierCode,
+            packageIds: $packageIds,
+            packageNumbers: $packageNumbers,
+            accountId: $accountId,
+            fields: $fields
         );
     }
 
@@ -443,7 +417,7 @@ class Shipment extends LaravelBaselinker
         ?int $accountId = null,
         ?array $fields = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
@@ -453,8 +427,6 @@ class Shipment extends LaravelBaselinker
                 'fields' => $fields,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -471,13 +443,11 @@ class Shipment extends LaravelBaselinker
      */
     public function getRequestParcelPickupFields(string $courierCode): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'courier_code' => $courierCode,
             ]),
         ]);
-
-        return $response->json();
     }
 }

@@ -415,21 +415,26 @@ $returns = Baselinker::order()->getOrderReturns(
 );
 
 // Add a return
-$result = Baselinker::order()->addOrderReturn(
-    orderId: 6910995,
-    orderReturnStatusId: 100,
-    adminComments: 'Return created by support',
-    products: [
-        ['order_product_id' => 12345, 'quantity' => 1]
-    ],
-    dateAdd: time(),
-    currency: 'EUR',
-    refunded: false
-);
+try {
+    $result = Baselinker::order()->addOrderReturn(
+        orderId: 6910995,
+        statusId: 100, // This is the ID of the return status
+        adminComments: 'Return created by support',
+        products: [
+            ['order_product_id' => 12345, 'quantity' => 1]
+        ],
+        dateAdd: time(),
+        currency: 'EUR',
+        refunded: false
+    );
+} catch (\Core45\LaravelBaselinker\Exceptions\BaselinkerException $e) {
+    // Handle API error
+    // e.g., Log::error($e->getMessage());
+}
 
 // Set return status
 $result = Baselinker::order()->setOrderReturnStatus(
-    orderReturnId: 789,
+    returnId: 789,
     statusId: 200
 );
 ```
@@ -544,18 +549,26 @@ Baselinker API has a rate limit of **100 requests per minute**. The package does
 
 ## Error Handling
 
-All methods return an array with the API response. Check for the `status` key:
+The package now uses centralized exception handling. If the Baselinker API returns an error, or if there is an HTTP-level failure, the package will throw a `\Core45\LaravelBaselinker\Exceptions\BaselinkerException`.
+
+You should wrap your API calls in a `try...catch` block to handle potential errors gracefully.
 
 ```php
-$result = Baselinker::catalog()->getInventories();
+use Core45\LaravelBaselinker\Facades\Baselinker;
+use Core45\LaravelBaselinker\Exceptions\BaselinkerException;
+use Illuminate\Support\Facades\Log;
 
-if ($result['status'] === 'SUCCESS') {
+try {
+    $inventories = Baselinker::catalog()->getInventories();
     // Handle success
-    $inventories = $result['inventories'];
-} else {
-    // Handle error
-    $errorMessage = $result['error_message'] ?? 'Unknown error';
-    $errorCode = $result['error_code'] ?? null;
+} catch (BaselinkerException $e) {
+    // Handle API error
+    Log::error('Baselinker API Error: ' . $e->getMessage());
+    // You can also get the error code if needed
+    $errorCode = $e->getCode();
+} catch (\Illuminate\Http\Client\RequestException $e) {
+    // Handle HTTP connection error
+    Log::error('Baselinker Connection Error: ' . $e->getMessage());
 }
 ```
 

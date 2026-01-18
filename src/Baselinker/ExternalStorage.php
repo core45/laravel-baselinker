@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Baselinker;
 
@@ -16,11 +16,9 @@ class ExternalStorage extends LaravelBaselinker
      */
     public function getExternalStoragesList(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -37,14 +35,12 @@ class ExternalStorage extends LaravelBaselinker
      */
     public function getExternalStorageCategories(string $storageId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -62,15 +58,13 @@ class ExternalStorage extends LaravelBaselinker
      */
     public function getExternalStorageProductsData(string $storageId, array $products): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
                 'products' => $products,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -113,7 +107,7 @@ class ExternalStorage extends LaravelBaselinker
         ?int $filterAvailable = null,
         ?int $page = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
@@ -131,8 +125,6 @@ class ExternalStorage extends LaravelBaselinker
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -150,15 +142,13 @@ class ExternalStorage extends LaravelBaselinker
      */
     public function getExternalStorageProductsQuantity(string $storageId, ?int $page = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -176,15 +166,13 @@ class ExternalStorage extends LaravelBaselinker
      */
     public function getExternalStorageProductsPrices(string $storageId, ?int $page = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
                 'page' => $page,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -207,14 +195,12 @@ class ExternalStorage extends LaravelBaselinker
      */
     public function updateExternalStorageProductsQuantity(string $storageId, array $products): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'storage_id' => $storageId,
                 'products' => $products,
             ]),
         ]);
-
-        return $response->json();
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Core45\LaravelBaselinker\Baselinker;
 
@@ -16,7 +16,7 @@ class Order extends LaravelBaselinker
      */
     public function getJournalList(int $lastLogId, array $logsTypes, ?int $orderId = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'last_log_id' => $lastLogId,
@@ -24,8 +24,6 @@ class Order extends LaravelBaselinker
                 'order_id' => $orderId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -115,7 +113,7 @@ class Order extends LaravelBaselinker
         array $products,
         ?int $customSourceId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_status_id' => $orderStatusId,
@@ -159,8 +157,6 @@ class Order extends LaravelBaselinker
                 'products' => $products,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -174,15 +170,13 @@ class Order extends LaravelBaselinker
      */
     public function addOrderDuplicate(int $orderId, ?int $orderStatusId = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'order_status_id' => $orderStatusId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -194,11 +188,9 @@ class Order extends LaravelBaselinker
      */
     public function getOrderSources(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -210,11 +202,9 @@ class Order extends LaravelBaselinker
      */
     public function getOrderExtraFields(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -247,7 +237,7 @@ class Order extends LaravelBaselinker
         ?string $filterOrderSource = null,
         ?string $filterOrderSourceId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -262,8 +252,6 @@ class Order extends LaravelBaselinker
                 'filter_order_source_id' => $filterOrderSourceId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -281,7 +269,7 @@ class Order extends LaravelBaselinker
         ?bool $includeComplexTaxes = null,
         ?bool $includeAmazonData = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -289,8 +277,6 @@ class Order extends LaravelBaselinker
                 'include_amazon_data' => $includeAmazonData,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -308,7 +294,11 @@ class Order extends LaravelBaselinker
         ?bool $includeComplexTaxes = null,
         ?bool $includeAmazonData = null
     ): array {
-        return $this->getOrderTransactionData($orderId, $includeComplexTaxes, $includeAmazonData);
+        return $this->getOrderTransactionData(
+            orderId: $orderId,
+            includeComplexTaxes: $includeComplexTaxes,
+            includeAmazonData: $includeAmazonData
+        );
     }
 
     /**
@@ -321,14 +311,12 @@ class Order extends LaravelBaselinker
      */
     public function getOrdersByEmail(string $email): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'email' => $email,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -341,14 +329,12 @@ class Order extends LaravelBaselinker
      */
     public function getOrdersByPhone(string $phone): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'phone' => $phone,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -361,14 +347,12 @@ class Order extends LaravelBaselinker
      */
     public function deleteOrders(array $orderIds): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_ids' => $orderIds,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -386,7 +370,7 @@ class Order extends LaravelBaselinker
         array $itemsToSplit,
         ?float $deliveryCostToSplit = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -394,8 +378,6 @@ class Order extends LaravelBaselinker
                 'delivery_cost_to_split' => $deliveryCostToSplit,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -415,7 +397,7 @@ class Order extends LaravelBaselinker
         string $mergeMode,
         bool $sumDeliveryCosts = false
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'main_order_id' => $mainOrderId,
@@ -424,8 +406,6 @@ class Order extends LaravelBaselinker
                 'sum_delivery_costs' => $sumDeliveryCosts,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -440,7 +420,7 @@ class Order extends LaravelBaselinker
      */
     public function addInvoice(int $orderId, int $seriesId, ?string $vatRate = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -448,8 +428,6 @@ class Order extends LaravelBaselinker
                 'vat_rate' => $vatRate,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -469,7 +447,7 @@ class Order extends LaravelBaselinker
         string $reason,
         ?array $correctionItems = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'invoice_id' => $invoiceId,
@@ -478,8 +456,6 @@ class Order extends LaravelBaselinker
                 'correction_items' => $correctionItems,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -504,7 +480,7 @@ class Order extends LaravelBaselinker
         ?int $seriesId = null,
         bool $getExternalInvoices = true
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'invoice_id' => $invoiceId,
@@ -515,8 +491,6 @@ class Order extends LaravelBaselinker
                 'get_external_invoices' => $getExternalInvoices,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -528,11 +502,9 @@ class Order extends LaravelBaselinker
      */
     public function getSeries(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -544,11 +516,9 @@ class Order extends LaravelBaselinker
      */
     public function getOrderStatusList(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -562,15 +532,13 @@ class Order extends LaravelBaselinker
      */
     public function getOrderPaymentsHistory(int $orderId, bool $showFullHistory = false): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'show_full_history' => $showFullHistory,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -583,14 +551,12 @@ class Order extends LaravelBaselinker
      */
     public function getOrderPickPackHistory(int $orderId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -604,15 +570,13 @@ class Order extends LaravelBaselinker
      */
     public function getNewReceipts(?int $seriesId = null, int $idFrom = 0): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'series_id' => $seriesId,
                 'id_from' => $idFrom,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -632,7 +596,7 @@ class Order extends LaravelBaselinker
         ?int $dateFrom = null,
         ?int $idFrom = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'receipt_id' => $receiptId,
@@ -641,8 +605,6 @@ class Order extends LaravelBaselinker
                 'id_from' => $idFrom,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -656,15 +618,13 @@ class Order extends LaravelBaselinker
      */
     public function getReceipt(int $orderId, ?int $receiptId = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'receipt_id' => $receiptId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -748,7 +708,7 @@ class Order extends LaravelBaselinker
         ?string $pickState = null,
         ?string $packState = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -789,8 +749,6 @@ class Order extends LaravelBaselinker
                 'pack_state' => $packState,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -834,7 +792,7 @@ class Order extends LaravelBaselinker
         ?string $attributes = null,
         ?float $weight = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -855,8 +813,6 @@ class Order extends LaravelBaselinker
                 'weight' => $weight,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -902,7 +858,7 @@ class Order extends LaravelBaselinker
         ?string $attributes = null,
         ?float $weight = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -924,8 +880,6 @@ class Order extends LaravelBaselinker
                 'weight' => $weight,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -939,15 +893,13 @@ class Order extends LaravelBaselinker
      */
     public function deleteOrderProduct(int $orderId, int $orderProductId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'order_product_id' => $orderProductId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -969,7 +921,7 @@ class Order extends LaravelBaselinker
         string $paymentComment,
         ?string $externalPaymentId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -979,8 +931,6 @@ class Order extends LaravelBaselinker
                 'external_payment_id' => $externalPaymentId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -994,15 +944,13 @@ class Order extends LaravelBaselinker
      */
     public function setOrderStatus(int $orderId, int $statusId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'status_id' => $statusId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1016,15 +964,13 @@ class Order extends LaravelBaselinker
      */
     public function setOrderStatuses(array $orderIds, int $statusId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_ids' => $orderIds,
                 'status_id' => $statusId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1046,7 +992,7 @@ class Order extends LaravelBaselinker
         bool $printerError = false,
         ?string $printerName = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'receipt_id' => $receiptId,
@@ -1056,8 +1002,6 @@ class Order extends LaravelBaselinker
                 'printer_name' => $printerName,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1072,7 +1016,7 @@ class Order extends LaravelBaselinker
      */
     public function addOrderInvoiceFile(int $invoiceId, string $file, ?string $externalInvoiceNumber = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'invoice_id' => $invoiceId,
@@ -1080,8 +1024,6 @@ class Order extends LaravelBaselinker
                 'external_invoice_number' => $externalInvoiceNumber,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1096,7 +1038,7 @@ class Order extends LaravelBaselinker
      */
     public function addOrderReceiptFile(int $receiptId, string $file, ?string $externalReceiptNumber = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'receipt_id' => $receiptId,
@@ -1104,8 +1046,6 @@ class Order extends LaravelBaselinker
                 'external_receipt_number' => $externalReceiptNumber,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1118,14 +1058,12 @@ class Order extends LaravelBaselinker
      */
     public function getInvoiceFile(int $invoiceId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'invoice_id' => $invoiceId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1137,11 +1075,9 @@ class Order extends LaravelBaselinker
      */
     public function getOrderPrintoutTemplates(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1155,15 +1091,13 @@ class Order extends LaravelBaselinker
      */
     public function runOrderMacroTrigger(int $orderId, int $triggerId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
                 'trigger_id' => $triggerId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     // ==================== ORDER RETURNS ====================
@@ -1180,7 +1114,7 @@ class Order extends LaravelBaselinker
      */
     public function getOrderReturnJournalList(int $lastLogId, array $logsTypes, ?int $orderReturnId = null): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'last_log_id' => $lastLogId,
@@ -1188,8 +1122,6 @@ class Order extends LaravelBaselinker
                 'return_id' => $orderReturnId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1253,7 +1185,7 @@ class Order extends LaravelBaselinker
         ?string $refundIban = null,
         ?string $refundSwift = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'order_id' => $orderId,
@@ -1284,8 +1216,6 @@ class Order extends LaravelBaselinker
                 'refund_swift' => $refundSwift,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1297,11 +1227,9 @@ class Order extends LaravelBaselinker
      */
     public function getOrderReturnExtraFields(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1331,7 +1259,7 @@ class Order extends LaravelBaselinker
         ?int $filterOrderReturnSourceId = null,
         bool $includeConnectData = false
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
@@ -1345,8 +1273,6 @@ class Order extends LaravelBaselinker
                 'include_connect_data' => $includeConnectData,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1358,11 +1284,9 @@ class Order extends LaravelBaselinker
      */
     public function getOrderReturnStatusList(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1376,15 +1300,13 @@ class Order extends LaravelBaselinker
      */
     public function getOrderReturnPaymentsHistory(int $orderReturnId, bool $showFullHistory = false): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
                 'show_full_history' => $showFullHistory,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1404,7 +1326,7 @@ class Order extends LaravelBaselinker
         ?string $extraField1 = null,
         ?string $extraField2 = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
@@ -1414,8 +1336,6 @@ class Order extends LaravelBaselinker
                 'extra_field_2' => $extraField2,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1437,7 +1357,7 @@ class Order extends LaravelBaselinker
         ?int $reasonId = null,
         ?int $productStatusId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
@@ -1447,8 +1367,6 @@ class Order extends LaravelBaselinker
                 'product_status_id' => $productStatusId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1470,7 +1388,7 @@ class Order extends LaravelBaselinker
         ?int $reasonId = null,
         ?int $productStatusId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
@@ -1480,8 +1398,6 @@ class Order extends LaravelBaselinker
                 'product_status_id' => $productStatusId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1495,15 +1411,13 @@ class Order extends LaravelBaselinker
      */
     public function deleteOrderReturnProduct(int $orderReturnId, int $orderReturnProductId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
                 'order_return_product_id' => $orderReturnProductId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1525,7 +1439,7 @@ class Order extends LaravelBaselinker
         string $refundComment,
         ?string $externalRefundId = null
     ): array {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
@@ -1535,8 +1449,6 @@ class Order extends LaravelBaselinker
                 'external_refund_id' => $externalRefundId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1548,11 +1460,9 @@ class Order extends LaravelBaselinker
      */
     public function getOrderReturnReasonsList(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1566,15 +1476,13 @@ class Order extends LaravelBaselinker
      */
     public function setOrderReturnStatus(int $orderReturnId, int $statusId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
                 'status_id' => $statusId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1588,15 +1496,13 @@ class Order extends LaravelBaselinker
      */
     public function setOrderReturnStatuses(array $orderReturnIds, int $statusId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_ids' => $orderReturnIds,
                 'status_id' => $statusId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1610,15 +1516,13 @@ class Order extends LaravelBaselinker
      */
     public function runOrderReturnMacroTrigger(int $orderReturnId, int $triggerId): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
             'parameters' => json_encode([
                 'return_id' => $orderReturnId,
                 'trigger_id' => $triggerId,
             ]),
         ]);
-
-        return $response->json();
     }
 
     /**
@@ -1630,10 +1534,8 @@ class Order extends LaravelBaselinker
      */
     public function getOrderReturnProductStatuses(): array
     {
-        $response = $this->makeRequest([
+        return $this->makeRequest([
             'method' => __FUNCTION__,
         ]);
-
-        return $response->json();
     }
 }
